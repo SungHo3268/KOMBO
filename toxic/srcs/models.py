@@ -15,9 +15,6 @@ class KOLDModel(nn.Module):
             self.bert = CustomBertModel(config)
         elif config.model_name == 'bert-base':
             self.bert = BertModel(config)
-        elif config.model_name == 'klue-bert-base':
-            print("Using klue-bert-base. Loading the model...")
-            self.bert = BertModel.from_pretrained("klue/bert-base")
         self.dropout = nn.Dropout(self.config.hidden_dropout_prob)
         self.class_num = config.__dict__[f"level_{config.label_level}_label_num"]
         self.classifier = nn.Linear(config.hidden_size, self.class_num)

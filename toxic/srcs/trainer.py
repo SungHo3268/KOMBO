@@ -31,10 +31,7 @@ class Trainer(nn.Module):
         self.label_map = None
         self.dataset = self.get_dataset()
 
-        if hparams.model_name == 'klue-bert-base':
-            self.tokenizer = AutoTokenizer.from_pretrained("klue/bert-base")
-        else:
-            self.tokenizer = get_bert_tokenizer(self.hparams)
+        self.tokenizer = get_bert_tokenizer(self.hparams)
         self.config, self.model, self.criterion = get_task_model(self.hparams, self.tokenizer)
         self.model.to(self.device)
         self.optimizer, self.lr_scheduler = self.get_optimizer_and_scheduler()

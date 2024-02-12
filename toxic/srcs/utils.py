@@ -109,43 +109,35 @@ def load_data(file_path="datasets/toxic/kold_v1.json"):
 
 
 def get_task_model(args, tokenizer):
-    if args.model_name == "klue-bert-base":
-        config = args
-        model = KOLDModel(config)
-        if args.label_level == 'C':
-            criterion = nn.BCEWithLogitsLoss()
-        else:
-            criterion = nn.CrossEntropyLoss(ignore_index=-100)
+    config = get_config(args)
+    config.vocab_size = tokenizer.vocab_size
+    if ('var' in config.tok_type) or ('distinct' in config.tok_type):
+        config.update({"space_symbol_id": tokenizer.space_symbol_id,
+                       "empty_jamo_id": tokenizer.empty_jamo_id,
+                       })
+
+    model = KOLDModel(config)
+    if args.label_level == 'C':
+        criterion = nn.BCEWithLogitsLoss()
     else:
-        config = get_config(args)
-        config.vocab_size = tokenizer.vocab_size
-        if ('var' in config.tok_type) or ('distinct' in config.tok_type):
-            config.update({"space_symbol_id": tokenizer.space_symbol_id,
-                           "empty_jamo_id": tokenizer.empty_jamo_id,
-                           })
+        criterion = nn.CrossEntropyLoss(ignore_index=-100)
 
-        model = KOLDModel(config)
-        if args.label_level == 'C':
-            criterion = nn.BCEWithLogitsLoss()
-        else:
-            criterion = nn.CrossEntropyLoss(ignore_index=-100)
+    # reload the checkpoint of the model
+    if args.save_dir:
+        print(f"Save directory: {args.save_dir.split('/')[-2]}")
+        model_path = os.path.join(args.save_dir, "pytorch_model.bin")
 
-        # reload the checkpoint of the model
-        if args.save_dir:
-            print(f"Save directory: {args.save_dir.split('/')[-2]}")
-            model_path = os.path.join(args.save_dir, "pytorch_model.bin")
+        save_dict = torch.load(model_path)
+        bert_state_dict = dict()
+        classifier_state_dict = dict()
+        for key in save_dict:
+            if 'bert' in key:
+                bert_state_dict['.'.join(key.split(".")[1:])] = save_dict[key]
+            elif 'classifier' in key:
+                classifier_state_dict['.'.join(key.split(".")[1:])] = save_dict[key]
 
-            save_dict = torch.load(model_path)
-            bert_state_dict = dict()
-            classifier_state_dict = dict()
-            for key in save_dict:
-                if 'bert' in key:
-                    bert_state_dict['.'.join(key.split(".")[1:])] = save_dict[key]
-                elif 'classifier' in key:
-                    classifier_state_dict['.'.join(key.split(".")[1:])] = save_dict[key]
-
-            model.bert.load_state_dict(bert_state_dict)
-            if len(classifier_state_dict) != 0:
-                model.classifier.load_state_dict(classifier_state_dict)
-            print("Complete to reload the checkpoint of the model from above save directory.")
+        model.bert.load_state_dict(bert_state_dict)
+        if len(classifier_state_dict) != 0:
+            model.classifier.load_state_dict(classifier_state_dict)
+        print("Complete to reload the checkpoint of the model from above save directory.")
     return config, model, criterion
