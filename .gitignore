@@ -13,3 +13,4 @@ logs
 __pycache__/
 *.out
 *.bin
+mecab*/
