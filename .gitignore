@@ -1,0 +1,15 @@
+.idea/
+.git/
+DS_Store/
+DS_Store
+*.pkl
+*.ckpt
+ckpt/
+docs/
+*.bz2
+datasets
+logs
+*/logs/*
+__pycache__/
+*.out
+*.bin

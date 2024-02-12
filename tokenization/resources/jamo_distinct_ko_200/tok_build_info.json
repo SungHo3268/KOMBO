@@ -1,0 +1,13 @@
+{
+    "mode": "client",
+    "host": "localhost",
+    "port": 37757,
+    "random_seed": 42,
+    "tok_type": "ko",
+    "tok_name": "jamo_distinct",
+    "vocab_size": 200,
+    "config_path": "tokenization/utils/tok_info.cfg",
+    "input_corpus": "datasets/wiki/wikiextracted/clean-ko-wiki-20220923.txt",
+    "output_dir": "tokenization/resources/jamo_distinct_ko_200",
+    "n_jobs": 20
+}
