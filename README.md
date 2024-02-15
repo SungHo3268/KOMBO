@@ -84,7 +84,7 @@
   > Notice)<br/>
   > To reproduce the baseline, we use the 0.1 version of the wikiextractor.<br/>
   > We use the latest version of the wiki dump dataset for both Korean and English. We use the data dated 20220923. <br/>
-  > You can download the dump data [here](remove_this/https://drive.google.com/drive/folders/1sIrBNRO66xboZPOmpyF5Cn9gQj8uyL6W?usp=share_link).
+  > You can download the dump data [here](write_your_repository).
   
   - Korean Wikipedia: <https://dumps.wikimedia.org/kowiki>
   - English Wikipedia: <https://dumps.wikimedia.org/enwiki>
@@ -254,19 +254,19 @@ abcde
 
 | Tokenization           | Vocab Size                                                                                                  | KorQuAD               | KorNLI    | KorSTS    | NSMC      | PAWS-X    |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------- | --------- | --------- | --------- | --------- |
-| Stroke                 | [130](https://www.dropbox.com/s/0ovofnol5j1g5ha/Dawoon%20Jung%20-%20word-64k-pretrained-bert.tar?dl=0)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| Cji                    | [136](https://www.dropbox.com/s/0ovofnol5j1g5ha/Dawoon%20Jung%20-%20word-64k-pretrained-bert.tar?dl=0)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| BTS                    | [112](https://www.dropbox.com/s/0ovofnol5j1g5ha/Dawoon%20Jung%20-%20word-64k-pretrained-bert.tar?dl=0)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| Jamo                   | [170](https://www.dropbox.com/s/m840vmgwis9glzq/Dawoon%20Jung%20-%20jamo-200-pretrained-bert.tar?dl=0)      | 59.66 / 73.91         | 70.6      | 71.2      | 77.22     | 71.47     | 87.97     | 87.89     | 58        | 55.20     |
-| Character              | [2K](https://www.dropbox.com/s/560c8lehfijn0mr/Dawoon%20Jung%20-%20char-2k-pretrained-bert.tar?dl=0)        | 69.10 / 83.29         | 73.98     | 73.47     | 82.7      | 75.86     | 88.94     | 89.07     | 68.65     | 67.20     |
-| Morpheme               | [32K](https://www.dropbox.com/s/215tb4ublea3orp/Dawoon%20Jung%20-%20mecab-32k-pretrained-bert.tar?dl=0)     | 68.05 / 83.82         | 74.86     | 74.37     | 82.37     | 76.83     | 87.87     | 88.04     | 69.3      | 67.20     |
-| Subword                | [32K](https://www.dropbox.com/s/6n1dp2dhjneb5hd/Dawoon%20Jung%20-%20bpe-32k-pretrained-bert.tar?dl=0)       | **74.04** / 86.30     | *74.74*   | 74.29     | 83.02     | 77.01     | *89.39*   | *89.38*   | 74.05     | 70.95     |
-| Morpheme-aware Subword | [32K](https://www.dropbox.com/s/mczbb3kf7fzt9l3/Dawoon%20Jung%20-%20mecab_bpe-32k-pretrained-bert.tar?dl=0) | *72.65* / *86.35*     | 74.1      | 75.13     | 83.65     | **78.11** | 89.53     | 89.65     | 74.6      | 71.60     |
-| Word                   | [64K](https://www.dropbox.com/s/0ovofnol5j1g5ha/Dawoon%20Jung%20-%20word-64k-pretrained-bert.tar?dl=0)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| KOMBO(Stroke)          | [130](https://www.dropbox.com/s/0ovofnol5j1g5ha/Dawoon%20Jung%20-%20word-64k-pretrained-bert.tar?dl=0)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| KOMBO(Cji)             | [136](https://www.dropbox.com/s/0ovofnol5j1g5ha/Dawoon%20Jung%20-%20word-64k-pretrained-bert.tar?dl=0)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| KOMBO(BTS)             | [112](https://www.dropbox.com/s/0ovofnol5j1g5ha/Dawoon%20Jung%20-%20word-64k-pretrained-bert.tar?dl=0)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| KOMBO(Jamo)            | [170](https://www.dropbox.com/s/m840vmgwis9glzq/Dawoon%20Jung%20-%20jamo-200-pretrained-bert.tar?dl=0)      | 59.66 / 73.91         | 70.6      | 71.2      | 77.22     | 71.47     | 87.97     | 87.89     | 58        | 55.20     |
+| Stroke                 | [130](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
+| Cji                    | [136](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
+| BTS                    | [112](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
+| Jamo                   | [170](write_your_repository)      | 59.66 / 73.91         | 70.6      | 71.2      | 77.22     | 71.47     | 87.97     | 87.89     | 58        | 55.20     |
+| Character              | [2K](write_your_repository)        | 69.10 / 83.29         | 73.98     | 73.47     | 82.7      | 75.86     | 88.94     | 89.07     | 68.65     | 67.20     |
+| Morpheme               | [32K](write_your_repository)     | 68.05 / 83.82         | 74.86     | 74.37     | 82.37     | 76.83     | 87.87     | 88.04     | 69.3      | 67.20     |
+| Subword                | [32K](write_your_repository)       | **74.04** / 86.30     | *74.74*   | 74.29     | 83.02     | 77.01     | *89.39*   | *89.38*   | 74.05     | 70.95     |
+| Morpheme-aware Subword | [32K](write_your_repository) | *72.65* / *86.35*     | 74.1      | 75.13     | 83.65     | **78.11** | 89.53     | 89.65     | 74.6      | 71.60     |
+| Word                   | [64K](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
+| KOMBO(Stroke)          | [130](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
+| KOMBO(Cji)             | [136](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
+| KOMBO(BTS)             | [112](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
+| KOMBO(Jamo)            | [170](write_your_repository)      | 59.66 / 73.91         | 70.6      | 71.2      | 77.22     | 71.47     | 87.97     | 87.89     | 58        | 55.20     |
   
 
 <a id="dataset"></a>
