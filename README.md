@@ -84,7 +84,7 @@
   > Notice)<br/>
   > To reproduce the baseline, we use the 0.1 version of the wikiextractor.<br/>
   > We use the latest version of the wiki dump dataset for both Korean and English. We use the data dated 20220923. <br/>
-  > You can download the dump data [here](https://drive.google.com/drive/folders/1sIrBNRO66xboZPOmpyF5Cn9gQj8uyL6W?usp=share_link).
+  > You can download the dump data [here](remove_this/https://drive.google.com/drive/folders/1sIrBNRO66xboZPOmpyF5Cn9gQj8uyL6W?usp=share_link).
   
   - Korean Wikipedia: <https://dumps.wikimedia.org/kowiki>
   - English Wikipedia: <https://dumps.wikimedia.org/enwiki>
