@@ -1,0 +1,9 @@
+{
+    "max_epochs": 4,
+    "batch_size": 32,
+    "gradient_accumulation_steps": 1,
+    "dropout_prob": 0.1,
+    "warmup_ratio": 0.1,
+    "tb_interval": 100
+  }
+  

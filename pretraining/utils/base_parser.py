@@ -77,11 +77,12 @@ class ArgsBase:
         parser.add_argument('--nsp_label_file', type=str, default="nsp_labels.txt")
         return parser
 
-    def add_nlu_task_args(self):
-        parent_parser = argparse.ArgumentParser(description="Fine_tuning NLU Tasks")
+    def add_finetune_args(self, description="Fine_tuning Downstream Tasks"):
+        parent_parser = argparse.ArgumentParser(description=description)
         parser = self.add_base_args(parent_parser)
 
-        parser.add_argument('--task_name', type=str, default='KorSTS', help='KorNLI  |  KorQuAD  |  KorSTS  |  NSMC  |  PAWS_X')
+        parser.add_argument('--task_name', type=str, default='KorSTS', help='KorNLI  |  KorQuAD  |  KorSTS  |  NSMC  |  PAWS_X  |'
+                                                                                            'KOLD  |  KMHaS  |  BEEP')
         parser.add_argument('--max_epochs', type=int, default=2)
         parser.add_argument('--optimizer', type=str, default="adamw", help='adamw  ||  adamwscale  ||  adafactor')
         parser.add_argument('--lr_scheduler', type=str, default='linear', help='cosine  ||  legacy  ||  constant  ||  linear')
@@ -91,27 +92,35 @@ class ArgsBase:
         parser.add_argument('--weight_decay', type=float, default=0.)
         parser.add_argument('--adam_epsilon', type=float, default=1e-06)
         parser.add_argument('--final_cosine', type=float, default=1e-05)
+        return parser
 
+    def add_nlu_task_args(self, description="Fine_tuning NLU Tasks"):
+        parent_parser = self.add_finetune_args()
+        parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning NLU Tasks")
+
+        # for KorQuAD
+        parser.add_argument('--max_query_len', type=int, default=64)
+        parser.add_argument('--max_answer_len', type=int, default=30)
         # for data preprocessing (KorNLI, KorSTS, NSMC, PAWS_X)
         parser.add_argument('--remain_lang', type=str, default="ko_en_punc")
         parser.add_argument('--do_hangeulize', type=_bool, default=True)
         parser.add_argument('--data_remove', type=_bool, default=True)
-        # for KorQuAD
-        parser.add_argument('--max_query_len', type=int, default=64)
-        parser.add_argument('--max_answer_len', type=int, default=30)
         return parser
 
-    def add_typo_task_args(self):
-        parent_parser = self.add_nlu_task_args()
+    def add_typo_task_args(self, description="Fine_tuning Typo Tasks"):
+        parent_parser = self.add_finetune_args()
         parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning Typo Tasks")
 
         parser.add_argument('--typo_rates', type=str, default="0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40", required=True)
         parser.add_argument('--pretrained_seed', type=str, default="2739_7848_7295", required=True)
         return parser
 
-    def add_toxic_task_args(self):
-        parent_parser = self.add_nlu_task_args()
+    def add_toxic_task_args(self, description="Fine_tuning Toxic Tasks"):
+        parent_parser = self.add_finetune_args()
         parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning Toxic Tasks")
+        # for BEEP
+        parser.add_argument('--binary', type=_bool, default=True)
+        parser.add_argument('--num_labels', type=int, default=2)
         # for KOLD
         parser.add_argument('--label_level', type=str, default="A", required=True, help="A  |  B  |  C")
         parser.add_argument('--split_ratio', type=str, default="0.8_0.1_0.1", help="train_dev_test")

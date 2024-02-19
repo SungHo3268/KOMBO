@@ -9,13 +9,15 @@ import torch
 import torch.nn as nn
 import torch.cuda.amp as amp
 from torch.utils.tensorboard import SummaryWriter
-from transformers import AutoTokenizer
 from argparse import ArgumentParser as parser
 sys.path.append(os.getcwd())
 from pretraining.srcs.functions import float_separator, BAR_FORMAT
-from toxic.srcs.utils import load_data, get_task_model
+from toxic.srcs.utils import get_task_model
+from toxic.data_configs.BEEP.data_utils import load_task_dataset as BEEP_dataset
+from toxic.data_configs.KMHaS.data_utils import load_task_dataset as KMHaS_dataset
+from toxic.data_configs.KOLD.data_utils import load_task_dataset as KOLD_dataset
 from nlu_tasks.srcs.nlu_utils import get_bert_tokenizer, get_optimizer, get_lr_scheduler
-from sklearn.metrics import f1_score, precision_recall_fscore_support
+from sklearn.metrics import precision_recall_fscore_support
 
 
 
@@ -28,8 +30,8 @@ class Trainer(nn.Module):
 
         self.model_name = self.hparams.model_name
 
-        self.label_map = None
-        self.dataset = self.get_dataset()
+        self.dataset, self.label_map = self.get_dataset()
+        self.class_num = len(set(self.label_map.values()))
 
         self.tokenizer = get_bert_tokenizer(self.hparams)
         self.config, self.model, self.criterion = get_task_model(self.hparams, self.tokenizer)
@@ -64,42 +66,18 @@ class Trainer(nn.Module):
         return optimizer, lr_scheduler
 
     def get_dataset(self):
-        dataset = load_data()
-        dataset = dataset[self.hparams.label_level]
-        self.label_map = dataset.pop("label_map")
+        if self.hparams.task_name.lower() == 'kold':
+            dataset = KOLD_dataset(self.hparams)
+        elif self.hparams.task_name.lower() == 'kmhas':
+            dataset = KMHaS_dataset(self.hparams)
+        elif self.hparams.task_name.lower() == 'beep':
+            dataset = BEEP_dataset(self.hparams)
+        else:
+            raise ValueError(f"Invalid task name: {self.hparams.task_name}")
 
-        train_dataset, dev_dataset, test_dataset = self.split_dataset(dataset)
-        dataset = {
-            'train': train_dataset,
-            'dev': dev_dataset,
-            'test': test_dataset
-        }
-        return dataset
+        label_map = dataset.pop("label_map")
+        return dataset, label_map
 
-    def split_dataset(self, dataset):
-        # Get datasets for each steps
-        split_ratio = list(map(float, self.hparams.split_ratio.split('_')))
-        _shuffle_dataset = self._shuffle_dataset(dataset)
-
-        train_size = int(len(_shuffle_dataset['label']) * split_ratio[0])
-        dev_size = int(len(_shuffle_dataset['label']) * split_ratio[1])
-
-        train_dataset = {
-            'sentence1': _shuffle_dataset['title'][: train_size],
-            'sentence2': _shuffle_dataset['comment'][: train_size],
-            'label': _shuffle_dataset['label'][: train_size]
-        }
-        dev_dataset = {
-            'sentence1': _shuffle_dataset['title'][train_size: train_size+dev_size],
-            'sentence2': _shuffle_dataset['comment'][train_size: train_size+dev_size],
-            'label': _shuffle_dataset['label'][train_size: train_size+dev_size]
-        }
-        test_dataset = {
-            'sentence1': _shuffle_dataset['title'][train_size+dev_size:],
-            'sentence2': _shuffle_dataset['comment'][train_size+dev_size:],
-            'label': _shuffle_dataset['label'][train_size+dev_size:]
-        }
-        return train_dataset, dev_dataset, test_dataset
 
     @staticmethod
     def _shuffle_dataset(dataset: Dict[str, Union[List[str], List[int]]]):
@@ -132,11 +110,15 @@ class Trainer(nn.Module):
 
         batched_dataset = self._batch_dataset(shuffled_dataset)
 
-        sentence1s = batched_dataset['sentence1']
-        sentence2s = batched_dataset['sentence2']
-        labels = batched_dataset['label']
-
         inputs = []
+        if self.hparams.task_name == 'KOLD':
+            sentence1s = batched_dataset['sentence1']
+            sentence2s = batched_dataset['sentence2']
+            labels = batched_dataset['label']
+        else:       # for BEEP and KMHaS
+            sentence1s = batched_dataset['sentence']
+            sentence2s = [None for _ in range(len(sentence1s))]
+            labels = batched_dataset['label']
         for i in tqdm(range(len(labels)), desc="Getting inputs...", bar_format=BAR_FORMAT):
             encoded_input = self.tokenizer(sentence1s[i], sentence2s[i], truncation=True, padding="max_length", max_length=self.hparams.max_seq_len, return_tensors="pt")
             inputs.append(encoded_input)
@@ -145,7 +127,7 @@ class Trainer(nn.Module):
     def _forward(self, inputs, labels):
         with amp.autocast():
             outputs, logits = self.model.forward(inputs)
-            loss = self.criterion(logits, labels)           # MSELoss
+            loss = self.criterion(logits, labels)
         return logits, loss
 
     def _train_step(self, inputs, labels):
@@ -188,7 +170,8 @@ class Trainer(nn.Module):
                 for key in batch:  # keys are {token_ids, attention_mask, token_type_ids, (start_positions), (end_positions)}
                     batch[key] = batch[key].to(self.device)
 
-                if self.hparams.label_level == 'C':
+                if (((self.hparams.task_name.lower() == 'kold') and (self.hparams.label_level == 'C')) or
+                        (self.hparams.task_name.lower() == 'kmhas')):
                     label = torch.FloatTensor(labels[i]).to(self.device)
                 else:
                     label = torch.LongTensor(labels[i]).to(self.device)
@@ -196,17 +179,18 @@ class Trainer(nn.Module):
                 outputs = self._eval_step(batch, label)
 
                 targets.extend(list(label.detach().cpu()))
-                if self.hparams.label_level == 'C':
+                if (((self.hparams.task_name.lower() == 'kold') and (self.hparams.label_level == 'C')) or
+                        (self.hparams.task_name.lower() == 'kmhas')):
                     predictions.extend(list(torch.sigmoid(outputs).detach().cpu()))
                 else:
                     predictions.extend(list(outputs.argmax(-1).detach().cpu()))
 
-        if self.hparams.label_level == 'C':
+        if (((self.hparams.task_name.lower() == 'kold') and (self.hparams.label_level == 'C')) or
+                (self.hparams.task_name.lower() == 'kmhas')):
             targets = np.stack(targets)
             predictions = np.stack(predictions)
             targets = (targets == 1) * 1
             predictions = (predictions >= 0.5) * 1
-
         else:
             targets = torch.tensor(targets)
             predictions = torch.tensor(predictions)
@@ -261,7 +245,8 @@ class Trainer(nn.Module):
                 for key in encoded_input:      # keys are {token_ids, attention_mask, (token_type_ids), (start_positions), (end_positions)}
                     encoded_input[key] = encoded_input[key].to(self.device)
 
-                if self.hparams.label_level == 'C':
+                if (((self.hparams.task_name.lower() == 'kold') and (self.hparams.label_level == 'C')) or
+                        (self.hparams.task_name.lower() == 'kmhas')):
                     label = torch.FloatTensor(labels[i]).to(self.device)
                 else:
                     label = torch.LongTensor(labels[i]).to(self.device)
@@ -273,20 +258,21 @@ class Trainer(nn.Module):
 
                 train_targets.extend(label.detach().cpu())
 
-                if self.hparams.label_level == 'C':
+                if (((self.hparams.task_name.lower() == 'kold') and (self.hparams.label_level == 'C')) or
+                        (self.hparams.task_name.lower() == 'kmhas')):
                     train_predictions.extend(list(torch.sigmoid(outputs).detach().cpu()))
                 else:
                     train_predictions.extend(list(outputs.argmax(-1).detach().cpu()))
 
                 if self.global_step != 0 and ((self.global_step % self.hparams.tb_interval) == 0):
-                    if self.hparams.label_level == 'C':
+                    if (((self.hparams.task_name.lower() == 'kold') and (self.hparams.label_level == 'C')) or
+                            (self.hparams.task_name.lower() == 'kmhas')):
                         train_targets = np.stack(train_targets)
                         train_predictions = np.stack(train_predictions)
-                        # print("train_targets: ", type(train_targets[0][0]))
-                        # print("train_predictions: ", type(train_predictions[0][0]))
                         train_targets = (train_targets == 1) * 1
                         train_predictions = (train_predictions >= 0.5) * 1
                     else:
+                        train_targets = torch.tensor(train_targets)
                         train_predictions = torch.tensor(train_predictions)
 
                     _ = self.log_results('train', train_loss / train_cnt, train_predictions, train_targets)
@@ -297,32 +283,50 @@ class Trainer(nn.Module):
 
             # evaluate dev and test set every epoch
             dev_predictions, dev_targets = self._evaluation(self.dataset["dev"])
-            _, _, _ = self.log_results('dev', None, dev_predictions, dev_targets)
+            dev_precision, dev_recall, dev_f1 = self.log_results('dev', None, dev_predictions, dev_targets)
 
             test_predictions, test_targets = self._evaluation(self.dataset["test"])
             test_precision, test_recall, test_f1 = self.log_results('test', None, test_predictions, test_targets)
 
-            if test_f1 >= self.best_ckpt['best_test_score']["f1"]:
+            if dev_f1 >= self.best_ckpt['best_dev_score']["f1"]:
                 self.best_ckpt['best_epoch'] = epoch + 1
+                self.best_ckpt['best_dev_score'] = {"precision": dev_precision,
+                                                     "recall": dev_recall,
+                                                     "f1": dev_f1}
                 self.best_ckpt['best_test_score'] = {"precision": test_precision,
                                                      "recall": test_recall,
                                                      "f1": test_f1}
-
                 print("Save the Best Model")
                 torch.save(self.model.state_dict(), os.path.join(self.hparams.ckpt_dir, "pytorch_model.bin"))
 
         print("\n")
         self.logger.info("######### BEST RESULT #########")
         self.logger.info(f"- Epoch: {self.best_ckpt['best_epoch']}")
+        self.logger.info(f"- DEV score")
+        self.logger.info(f"  ㄴ Precision: {self.best_ckpt['best_dev_score']['precision'] * 100:.2f} [%]")
+        self.logger.info(f"  ㄴ Recall   : {self.best_ckpt['best_dev_score']['recall'] * 100:.2f} [%]")
+        self.logger.info(f"  ㄴ F1-score : {self.best_ckpt['best_dev_score']['f1'] * 100:.2f} [%]")
         self.logger.info(f"- TEST score")
         self.logger.info(f"  ㄴ Precision: {self.best_ckpt['best_test_score']['precision'] * 100:.2f} [%]")
         self.logger.info(f"  ㄴ Recall   : {self.best_ckpt['best_test_score']['recall'] * 100:.2f} [%]")
         self.logger.info(f"  ㄴ F1-score : {self.best_ckpt['best_test_score']['f1'] * 100:.2f} [%]")
         self.logger.info("###############################")
         print("\n\n")
+
     def log_results(self, mode: str, running_loss, predictions, targets):
-        metric = "binary" if self.hparams.label_level == "A" else "macro"
-        labels = [i for i in range(0, self.config.level_C_label_num)] if self.hparams.label_level == "C" else [i for i in range(len(self.label_map))]
+        metric = "binary" if (((self.hparams.task_name.lower() == 'kold') and (self.hparams.label_level == "A")) or
+                              ((self.hparams.task_name.lower() == 'beep') and self.hparams.binary)) \
+            else "macro"
+
+        if self.hparams.task_name.lower() == 'kold':
+            labels = [i for i in range(self.config.level_C_label_num)] if self.hparams.label_level == "C" else [i for i in range(self.class_num)]
+        elif self.hparams.task_name.lower() == 'kmhas':
+            labels = np.arange(self.class_num)
+            labels = labels[:-1]
+        elif self.hparams.task_name.lower() == 'beep':
+            labels = np.arange(self.class_num)
+        else:
+            raise NotImplementedError
         if mode == 'train':
             # print(f"train_predictions.shape: {predictions[:10]}")
             # print(f"train_labels.shape: {targets[:10]}")

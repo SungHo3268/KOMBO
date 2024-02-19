@@ -13,7 +13,8 @@ from toxic.srcs.trainer import Trainer
 parser = ArgsBase().add_toxic_task_args()
 temp_args = parser.parse_args()
 temp = vars(temp_args)
-config = json.load(open(f"toxic/utils/config.json"))
+
+config = json.load(open(f"toxic/data_configs/{temp['task_name']}/config.json"))
 for arg in config:
     temp[arg] = config[arg]
 
@@ -64,7 +65,6 @@ if 'kombo' in args.model_name:
         prefix += f"trans{args.num_hidden_layers}_"
 
 args.log_dir = f"logs/{args.model_name}/{args.tok_name}/toxic/{args.task_name}/{prefix}{args.max_seq_len}t_{args.batch_size}b_{args.gradient_accumulation_steps}s_{args.max_epochs}e_{args.learning_rate}lr_{args.random_seed}rs_{args.label_level}"
-
 args.ckpt_dir = os.path.join(args.log_dir, 'ckpt')
 args.tb_dir = os.path.join(args.log_dir, 'tb')
 
