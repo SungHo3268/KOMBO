@@ -40,7 +40,7 @@
   <li>
     <a href="#toxic_datasets">Toxic Datasets</a>
     <ol>
-      <li><a href="#toxic_datasets">Datasets</a></li>
+      <li><a href="#toxic_data">Datasets</a></li>
       <li><a href="#toxic_finetuning">Fine Tuning</a></li>
     </ol>
   </li>
@@ -403,12 +403,12 @@ You can find the pre-trained models [here](write_your_repository).
 <br/>
 
 
-<a id="toxic_data"></a>
+<a id="toxic_datasets"></a>
 ## 6. Toxic Data
 #### Evaluation results for the robustness of the models on three toxic datasets.
 <img src='assets/ToxicData.png' width='800'>
 
-<a id="toxic_datasets"></a>
+<a id="toxic_data"></a>
 ### i. Datasets
 - we experiment on three Korean offensive language datasets. BEEP! dataset is a binary classification task. K-MHaS and KOLD both are the multi-label classification tasks.
   - BEEP! ([Moon et al., 2020](https://aclanthology.org/2020.socialnlp-1.4/))
