@@ -344,8 +344,7 @@ You can find the pre-trained models [here](write_your_repository).
 
 <a id="typo_finetuning"></a>
 ### i. Fine-tuning
-- All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) across all tasks and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
-  These are basically the same as Korean NLU tasks, except the <ins>typo type</ins> and <ins>typo rates</ins> settings.
+- These are basically the same as Korean NLU tasks, except the <ins>typo type</ins> and <ins>typo rates</ins> settings.
 - We implement four different typological error generating methods, such as Insert, Transpose, Substitue, and Delete. <br/>
   You should set the `typo_type` among random, insert, transpose, substitute, and delete.
 
