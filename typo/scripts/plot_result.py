@@ -65,7 +65,7 @@ for i, task_name in enumerate(df):
     baseline_y = [acc for acc in cur_df[sota_baseline]]
     hem_y = [acc for acc in cur_df["KOMBO (Jamo)"]]
 
-    # fill the area between MorSubword and HALLA(Jamo), which are the baseline SOTA and our method SOTA, respectively.
+    # fill the area between MorSubword and KOMBO (Jamo), which are the baseline SOTA and our method SOTA, respectively.
     ax.fill_between(x, baseline_y, hem_y, alpha=0.2, color="grey")
 
     # Add the arrow to show and stress the difference between MorSubword and HALLA(Jamo)
