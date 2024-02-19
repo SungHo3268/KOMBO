@@ -32,12 +32,16 @@
   </li>
   <li>
     <a href="#noisy-korean-datasets">Noisy Korean Datasets</a>
+    <ul>
+      <li><a href="#typo_finetuning">2. Fine-tuning</a></li>
+    </ul>
+
   </li>
   <li>
     <a href="#toxic_datasets">Toxic Datasets</a>
     <ul>
-      <li><a href="#toxic_datasets">Dataset</a></li>
-      <li><a href="#toxic_finetuning">Fine Tuning</a></li>
+      <li><a href="#toxic_datasets">1. Dataset</a></li>
+      <li><a href="#toxic_finetuning">2. Fine Tuning</a></li>
     </ul>
   </li>
 </ul>
@@ -269,7 +273,7 @@ You can find the pre-trained models [here](write_your_repository).
 <img src='assets/KoreanNLU.png' width='800'>
 
 <a id="nlu_datasets"></a>
-### Datasets
+### 1. Datasets
 - For each tokenization strategy, fine-tuning of 5 Korean NLU tasks, KorQuAD, KorNLI, KorSTS, NSMC, and PAWS_X, was performed.
   - KorQuAD 1.0 ([Lim et al., 2019](https://arxiv.org/abs/1909.07005))
   - KorNLI ([Ham et al., 2020](https://aclanthology.org/2020.findings-emnlp.39/))
@@ -280,7 +284,7 @@ You can find the pre-trained models [here](write_your_repository).
 
 
 <a id="nlu_finetuning"></a>
-### Fine-tuning
+### 2. Fine-tuning
 - All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) across all tasks and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
 - You can run the fine-tuning of the models for each tasks you want as follows:
 
@@ -339,7 +343,7 @@ You can find the pre-trained models [here](write_your_repository).
 <img src='assets/TypoData.png' width='800'>
 
 <a id="typo_finetuning"></a>
-### Fine-tuning
+### 1. Fine-tuning
 - All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) across all tasks and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
 - These are basically the same as Korean NLU tasks, except the <ins>typo type</ins> and <ins>typo rates</ins> settings.
 - We conduct this experiment <ins>using pre-trained language models on Korean NLU tasks</ins> and <ins>only do test</ins> on typo environments.
@@ -402,14 +406,14 @@ You can find the pre-trained models [here](write_your_repository).
 <img src='assets/ToxicData.png' width='800'>
 
 <a id="toxic_datasets"></a>
-### Dataset
+### 1. Dataset
 - we experiment on three Korean offensive language datasets. BEEP! dataset is a binary classification task. K-MHaS and KOLD both are the multi-label classification tasks.
   - BEEP! ([Moon et al., 2020](https://aclanthology.org/2020.socialnlp-1.4/))
   - K-MHaS ([Lee et al., 2022](https://aclanthology.org/2022.coling-1.311/))
   - KOLD ([Jeong et al., 2022](https://aclanthology.org/2022.emnlp-main.744/))
 
 <a id="toxic_finetuning"></a>
-### Fine-tuning
+### 2. Fine-tuning
 - You can run the fine-tuning of the models for each tasks you want as follows:
   
   * BERT-base
