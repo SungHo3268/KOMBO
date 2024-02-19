@@ -3,48 +3,48 @@
 
 <!-- TABLE OF CONTENTS -->
 <h2>Contents</h2>
-<ul>
+<ol>
   <li>
     <a href="#environment_installation">Environment Installation</a>
   </li>
   <li>
-    <a href="#experimental-settings">Experimental Settings</a>
-    <ul>
-      <li><a href="#corpus">1. Corpus</a></li>
-      <li><a href="#tokenization-baselines">2. Tokenization Baselines</a></li>
-      <li><a href="#building-vocabulary">3. Building vocabulary</a></li>
-    </ul>
+    <a href="#experimental_settings">Experimental Settings</a>
+    <ol>
+      <li><a href="#corpus">Corpus</a></li>
+      <li><a href="#tokenization_baselines">Tokenization Baselines</a></li>
+      <li><a href="#building_vocabulary">Building vocabulary</a></li>
+    </ol>
   </li>
   <li>
-    <a href="#Pretraining">Pretraining</a>
-    <ul>
+    <a href="#pretraining">Pre-training</a>
+    <ol>
       <li><a href="#pretraining_data">1. Dataset</a></li>
       <li><a href="#run_pretraining">2. Run Training</a></li>
       <li><a href="#pretrained_models">3. Baselines</a></li>
-    </ul>
+    </ol>
   </li>
   <li>
-    <a href="#standard-korean-datasets">Standard Korean Datasets</a>
-    <ul>
-      <li><a href="#nlu_datasets">1. Dataset</a></li>
-      <li><a href="#nlu_finetuning">2. Fine-tuning</a></li>
-    </ul>
+    <a href="#standard_korean_datasets">Standard Korean Datasets</a>
+    <ol>
+      <li><a href="#nlu_datasets">Dataset</a></li>
+      <li><a href="#nlu_finetuning">Fine-tuning</a></li>
+    </ol>
   </li>
   <li>
-    <a href="#noisy-korean-datasets">Noisy Korean Datasets</a>
-    <ul>
-      <li><a href="#typo_finetuning">1. Fine-tuning</a></li>
-    </ul>
+    <a href="#noisy_korean_datasets">Noisy Korean Datasets</a>
+    <ol>
+      <li><a href="#typo_finetuning">Fine-tuning</a></li>
+    </ol>
 
   </li>
   <li>
     <a href="#toxic_datasets">Toxic Datasets</a>
-    <ul>
-      <li><a href="#toxic_datasets">1. Dataset</a></li>
-      <li><a href="#toxic_finetuning">2. Fine Tuning</a></li>
-    </ul>
+    <ol>
+      <li><a href="#toxic_datasets">Dataset</a></li>
+      <li><a href="#toxic_finetuning">Fine Tuning</a></li>
+    </ol>
   </li>
-</ul>
+</ol>
 <br/>
 <br/>
 
@@ -55,7 +55,7 @@
 <br/>
 
 <a id="environment_installation"></a>
-## Environment Installation
+## 1. Environment Installation
 - Create your virtual environment.
   ```bash
   conda create -n {your_env} python=3.8
@@ -71,9 +71,10 @@
 <br/>
 
 
-## Experimental Settings
+<a id="experimental_settings"></a>
+## 2. Experimental Settings
 <a id="corpus"></a>
-### 1. Corpus
+### i. Corpus
 
 * Dataset preprocessing
 
@@ -138,8 +139,8 @@
     bash bash_scripts/installation/download_tasks.sh
     ```
 
-<a id="tokenization-baselines"></a>
-### 2. Tokenization Baselines 
+<a id="tokenization_baselines"></a>
+### ii. Tokenization Baselines 
 
 * There are 13 tokenization strategies for Korean. See [here](tokenization/) to prepare and use each strategy.
   
@@ -158,8 +159,8 @@
   * **KOMBO(Jamo)** - 170
 
 
-<a id="building-vocabulary"></a>
-### 3. Building vocabulary
+<a id="building_vocabulary"></a>
+### iii. Building vocabulary
 
 - This return the <code>tok.vocab</code> and <code>fairseq.vocab</code> (and <code>tok.model</code> @subword, morpphemeSubword) <br/>
   ```bash
@@ -178,11 +179,11 @@
 <br/>
 <br/>
 
-<a id="Pretraining"></a>
-## Pre-training
+<a id="pretraining"></a>
+## 3. Pre-training
 
 <a id="pretraining_data"></a>
-### 1. Dataset
+### i. Dataset
 
 - Because the Korean Wiki corpus(20220923) (753 MB) is not enough in volume for the pre-training purpose, we additionally downloaded the recent dump of [Namuwiki corpus(20190312) (5.5 GB)](https://namu.wiki/w/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4:%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4%20%EB%8D%A4%ED%94%84) and extracted plain texts using [Namu Wiki Extractor](https://github.com/jonghwanhyeon/namu-wiki-extractor/tree/4d864d2f7da1d4cb767c22d82f91fe2912007e4b) with adding document seperation(<code>'\n'</code>) per article.
   ```bash
@@ -205,7 +206,7 @@
 
 
 <a id="run_pretraining"></a>
-### 2. Run Training
+### ii. Run Training
 
 For  each  tokenization  strategy,  pre-training of BERT-Base model (Devlin et al., 2019)  was  performed with a Huggingface and Pytorch library.
 - Trim original dataset (remove doc seperator, space) and Make the corpus and labels for NSP task for each tasks. It returns the `sentence_as.txt`, `sentence_bs.txt`, and `nsp_labels.txt`. <br/>
@@ -259,20 +260,20 @@ We preprocessed the input segments by referring the [official BERT code](https:/
   If you want to resume the pre-training, you should set the save_dir to the directory of checkpoint.
   
 <a id="pretrained_models"></a>
-### 3. Baselines
+### iii. Baselines
 You can find the pre-trained models [here](write_your_repository).
 
 <br/>
 <br/>
 
 
-
-## Standard Korean Datasets
+<a id="standard_korean_datasets"></a>
+## 4. Standard Korean Datasets
 #### Performance of various tokenization methods for PLMs on standard Korean datasets.
 <img src='assets/KoreanNLU.png' width='800'>
 
 <a id="nlu_datasets"></a>
-### 1. Datasets
+### i. Datasets
 - For each tokenization strategy, fine-tuning of 5 Korean NLU tasks, KorQuAD, KorNLI, KorSTS, NSMC, and PAWS_X, was performed.
   - KorQuAD 1.0 ([Lim et al., 2019](https://arxiv.org/abs/1909.07005))
   - KorNLI ([Ham et al., 2020](https://aclanthology.org/2020.findings-emnlp.39/))
@@ -283,7 +284,7 @@ You can find the pre-trained models [here](write_your_repository).
 
 
 <a id="nlu_finetuning"></a>
-### 2. Fine-tuning
+### ii. Fine-tuning
 - All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) across all tasks and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
 - You can run the fine-tuning of the models for each tasks you want as follows:
 
@@ -336,13 +337,13 @@ You can find the pre-trained models [here](write_your_repository).
 <br/>
 
 
-
-## Noisy Korean Datasets
+<a id="noisy_korean_datasets"></a>
+## 5. Noisy Korean Datasets
 #### Performance of the models on NLU tasks with typological errors.
 <img src='assets/TypoData.png' width='800'>
 
 <a id="typo_finetuning"></a>
-### 1. Fine-tuning
+### i. Fine-tuning
 - All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) across all tasks and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
 - These are basically the same as Korean NLU tasks, except the <ins>typo type</ins> and <ins>typo rates</ins> settings.
 - We conduct this experiment <ins>using pre-trained language models on Korean NLU tasks</ins> and <ins>only do test</ins> on typo environments.
@@ -402,19 +403,20 @@ You can find the pre-trained models [here](write_your_repository).
 <br/>
 
 
-## Toxic Data
+<a id="toxic_data"></a>
+## 6. Toxic Data
 #### Evaluation results for the robustness of the models on three toxic datasets.
 <img src='assets/ToxicData.png' width='800'>
 
 <a id="toxic_datasets"></a>
-### 1. Dataset
+### i. Dataset
 - we experiment on three Korean offensive language datasets. BEEP! dataset is a binary classification task. K-MHaS and KOLD both are the multi-label classification tasks.
   - BEEP! ([Moon et al., 2020](https://aclanthology.org/2020.socialnlp-1.4/))
   - K-MHaS ([Lee et al., 2022](https://aclanthology.org/2022.coling-1.311/))
   - KOLD ([Jeong et al., 2022](https://aclanthology.org/2022.emnlp-main.744/))
 
 <a id="toxic_finetuning"></a>
-### 2. Fine-tuning
+### ii. Fine-tuning
 - You can run the fine-tuning of the models for each tasks you want as follows:
   
   * BERT-base
