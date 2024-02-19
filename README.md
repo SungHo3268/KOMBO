@@ -1,55 +1,53 @@
-# KOMBO: Korean Character-level Architecture Based on the Combination Rules of Sub-characters
+# KOMBO: Korean Character Representations Based on the Combination Rules of Subcharacters
 
 
 <!-- TABLE OF CONTENTS -->
 <h2>Contents</h2>
 <ul>
   <li>
-    <a href="#installation">Installation</a>
+    <a href="#environment_installation">Environment Installation</a>
   </li>
   <li>
     <a href="#experimental-settings">Experimental Settings</a>
     <ul>
-      <li><a href="#corpus">Corpus</a></li>
-      <li><a href="#tokenization-baselines">Tokenization Baselines</a></li>
-      <li><a href="#building-vocabulary">Building vocabulary</a></li>
+      <li><a href="#corpus">1. Corpus</a></li>
+      <li><a href="#tokenization-baselines">2. Tokenization Baselines</a></li>
+      <li><a href="#building-vocabulary">3. Building vocabulary</a></li>
     </ul>
   </li>
   <li>
     <a href="#Pretraining">Pretraining</a>
     <ul>
-      <li><a href="#pretraining_data">Dataset</a></li>
-      <li><a href="#pretraining_settings">Settings</a></li>
-      <li><a href="#pretrained_models">Baselines</a></li>
+      <li><a href="#pretraining_data">1. Dataset</a></li>
+      <li><a href="#run_pretraining">2. Run Training</a></li>
+      <li><a href="#pretrained_models">3. Baselines</a></li>
     </ul>
   </li>
   <li>
     <a href="#standard-korean-datasets">Standard Korean Datasets</a>
-    <ul>
-      <li><a href="#dataset">Dataset</a></li>
-      <li><a href="#fine_tuning">Fine-tuning</a></li>
-    </ul>
   </li>
   <li>
     <a href="#noisy-korean-datasets">Noisy Korean Datasets</a>
+  </li>
+  <li>
+    <a href="#toxic_datasets">Toxic Datasets</a>
     <ul>
-      <li><a href="#task1">Typo Data</a></li>
-        <ul>
-          <li><a href="#dataset1">Dataset</a></li>
-          <li><a href="#fine_tuning1">Fine-tuning</a></li>
-        </ul>
-      <li><a href="#task2">Toxic Data</a></li>
-        <ul>
-          <li><a href="#dataset2">Dataset</a></li>
-          <li><a href="#fine_tuning2">Fine-tuning</a></li>
-        </ul>
+      <li><a href="#toxic_data">Dataset</a></li>
+      <li><a href="#fine_tuning">Fine Tuning</a></li>
     </ul>
   </li>
 </ul>
 <br/>
 <br/>
 
-## Installation
+#### Overall illustration of KOMBO where the input is "훈민정음" which has four characters and twelve subcharacters.
+<img src='assets/model_architecture.png' width='900'>
+
+<br/>
+<br/>
+
+<a id="environment_installation"></a>
+## Environment Installation
 - Create your virtual environment.
   ```bash
   conda create -n {your_env} python=3.8
@@ -63,13 +61,11 @@
   bash bash_scripts/installation/env_setting.sh
   ```
 <br/>
-<br/>
-
 
 
 ## Experimental Settings
 <a id="corpus"></a>
-### Corpus
+### 1. Corpus
 
 * Dataset preprocessing
 
@@ -135,7 +131,7 @@
     ```
 
 <a id="tokenization-baselines"></a>
-### Tokenization Baselines 
+### 2. Tokenization Baselines 
 
 * There are 13 tokenization strategies for Korean. See [here](tokenization/) to prepare and use each strategy.
   
@@ -155,11 +151,11 @@
 
 
 <a id="building-vocabulary"></a>
-### Building vocabulary
+### 3. Building vocabulary
 
 - This return the <code>tok.vocab</code> and <code>fairseq.vocab</code> (and <code>tok.model</code> @subword, morpphemeSubword) <br/>
   ```bash
-  python tokenization/bash_scripts/build_vocab.py \
+  python tokenization/scripts/build_vocab.py \
   --tok_type en --tok_name subword --vocab_size 32000 \
   --config_path tokenization/utils/tok_info.cfg \
   --input_corpus datasets/wiki/wikiextracted/clean-en-wiki-20220923.txt \
@@ -177,54 +173,17 @@
 <a id="Pretraining"></a>
 ## Pre-training
 
-For  each  tokenization  strategy,  pre-training of BERT-Base model (Devlin et al., 2019)  was  performed with a Huggingface and Pytorch library.
-- Trim original dataset (remove doc seperator, space) and Make the corpus and labels for NSP task for each tasks. It returns the `sentence_as.txt`, `sentence_bs.txt`, and `nsp_labels.txt`. <br/>
-We preprocessed the input segments by referring the [official BERT code](https://github.com/google-research/bert/blob/master/create_pretraining_data.py).<br/>
-    
-    
-- We set the training hyper-parameters of all models as follows:<br/>
-`batch_size=128`, `max_sequence_length=128`, `learning_rate=5e-5`, `total_steps=1_000_000` `warm_up_steps=10_000`
-    
-- Run Training
-  ```bash
-  python nlu_tasks/bash_scripts/run_pretraining.py --random_seed 42 --multi_gpu False \
-  --tok_type ${TOKENIZER} --lang ${LANGUAGE} --tok_vocab_size ${TOK_VOCAB} --bpe_corpus ${BPE_CORPUS} \
-  --bert_config_path nlu_tasks/utils/bert_config.json --max_seq_len 128 --reload False \
-  --batch_size 128 --gradient_accumulation_steps 1 --total_steps 1_000_000 --num_warmup_steps 10_000 \
-  --learninig_rate 5e-05 --max_grad_norm 1.
-  
-  
-  # TOKENIZER = {jamo, char, morpheme, subword, morphemeSubword, word, stroke, cji, bts}
-  # LANGUAGE = {ko, en}
-  # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
-  # BPE_CORPUS = {wiki, aihub}
-  ```
-
-
-  If you want to resume the pre-training, you should set the reload and ckpt_dir argument additionaly.
-  ```bash
-  python nlu_tasks/bash_scripts/run_pretraining.py --tok_type ${TOKENIZER} --tok_vocab_size ${TOK_VOCAB} \
-  --reload True --ckpt_dir ${CKPT_DIR}
-  
-  
-  # TOKENIZER = {jamo, char, morpheme, subword, morphemeSubword, word, stroke, cji, bts}
-  # LANGUAGE = {ko, en}
-  # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
-  # BPE_CORPUS = {wiki, aihub}
-  # CKPT_DIR = {checkpoint-300000, ckpt}
-  ```
-
 <a id="pretraining_data"></a>
-### Dataset
+### 1. Dataset
 
 - Because the Korean Wiki corpus(20220923) (753 MB) is not enough in volume for the pre-training purpose, we additionally downloaded the recent dump of [Namuwiki corpus(20190312) (5.5 GB)](https://namu.wiki/w/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4:%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4%20%EB%8D%A4%ED%94%84) and extracted plain texts using [Namu Wiki Extractor](https://github.com/jonghwanhyeon/namu-wiki-extractor/tree/4d864d2f7da1d4cb767c22d82f91fe2912007e4b) with adding document seperation(<code>'\n'</code>) per article.
   ```bash
   python utils/namuwiki_extract.py --input_corpus datasets/namuwiki/raw/namuwiki_20200302.json --output_dir datasets/namuwiki/extracted
   ```
 
-- Then, we [preprocess](nlu_tasks/preprocess/clean_corpus.py) the corpus as we mentioned above. It returns the file name pattern like "clean-doc-*.txt"<br/>
+- Then, we [preprocess](pretraining/utils/clean_corpus.py) the corpus as we mentioned above. It returns the file name pattern like "clean-doc-*.txt"<br/>
   ```bash
-  python nlu_tasks/preprocess/clean_corpus.py --input_corpus {CORPUS}
+  python pretraining/utils/clean_corpus.py --input_corpus {CORPUS}
 
 
   # CORPUS = { kowiki, namuwiki }
@@ -237,13 +196,64 @@ We preprocessed the input segments by referring the [official BERT code](https:/
   ```
 
 
-<a id="pretraining_settings"></a>
-### Settings
-abcde
+<a id="run_pretraining"></a>
+### 2. Run Training
 
+For  each  tokenization  strategy,  pre-training of BERT-Base model (Devlin et al., 2019)  was  performed with a Huggingface and Pytorch library.
+- Trim original dataset (remove doc seperator, space) and Make the corpus and labels for NSP task for each tasks. It returns the `sentence_as.txt`, `sentence_bs.txt`, and `nsp_labels.txt`. <br/>
+We preprocessed the input segments by referring the [official BERT code](https://github.com/google-research/bert/blob/master/create_pretraining_data.py).<br/>
+    
+    
+- We set the training hyper-parameters of all models as follows:<br/>
+`batch_size=128`, `max_sequence_length=128`, `learning_rate=5e-5`, `total_steps=1_000_000` `warm_up_steps=10_000`
+    
+- Run Training
+  * BERT-base
+  ```bash
+  python pretraining/scripts/run_pretraining.py --random_seed 42 \
+  --tok_type ${TOKENIZER} --tok_vocab_size ${TOK_VOCAB} \
+  --model_name bert-base \
+  --max_seq_len 128 --batch_size 128 --gradient_accumulation_steps 1 \
+  --learninig_rate 5e-05 --max_grad_norm 1. --total_steps 1_000_000 --num_warmup_steps 10_000 \
+
+  
+  # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
+  # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
+  ```
+
+  * KOMBO-base
+  ```bash
+  python pretraining/scripts/run_pretraining.py --random_seed 42 \
+  --tok_type ${TOKENIZER} --tok_vocab_size 200 \
+  --model_name kombo-base --mlm_unit ${MASKING} --jamo_fusion ${COMBINATION} --jamo_trans_layer 3 \
+  --upsampling ${RESTORATION} --upsampling_residual True \
+  --max_seq_len 128 --batch_size 128 --gradient_accumulation_steps 1 \
+  --learninig_rate 5e-05 --max_grad_norm 1. --total_steps 1_000_000 --num_warmup_steps 10_000 \
+  
+  
+  # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
+  # MASKING = {token, character}  
+  # COMBINATION = {
+    KOMBO: trans_gru_conv1,
+    KOMBO w/o contextualization: conv1,
+    KOMBO w/ (2x2 kernel): trans_gru_conv,
+    KOMBO w/ (2x3 kernel): trans_gru_conv3,
+    KOMBO w/ (2x1 + 2x2 kernel): conv2,
+    KOMBO w/ attention_pooling: trans_attention_pool,
+    KOMBO w/ linear_pooling: trans_linear_pool,
+  }
+  # RESTORATION = {
+    linear, repeat_linear, gru, repeat_gru
+  }
+  # Notice) You should set `ignore_structure` option to "True", when you reconstruct the downsampling methods of Funnel(attention_pooling) or Hourglass(linear_pooling) Transformer in KOMBO.
+  ```
+
+
+  If you want to resume the pre-training, you should set the save_dir to the directory of checkpoint.
+  
 <a id="pretrained_models"></a>
-### Baselines
-abcde
+### 3. Baselines
+You can find the pre-trained models [here](write_your_repository).
 
 <br/>
 <br/>
@@ -251,87 +261,84 @@ abcde
 
 
 ## Standard Korean Datasets
+#### Performance of various tokenization methods for PLMs on standard Korean datasets.
+<img src='assets/KoreanNLU.png' width='800'>
 
-| Tokenization           | Vocab Size                                                                                                  | KorQuAD               | KorNLI    | KorSTS    | NSMC      | PAWS-X    |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------- | --------- | --------- | --------- | --------- |
-| Stroke                 | [130](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| Cji                    | [136](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| BTS                    | [112](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| Jamo                   | [170](write_your_repository)      | 59.66 / 73.91         | 70.6      | 71.2      | 77.22     | 71.47     | 87.97     | 87.89     | 58        | 55.20     |
-| Character              | [2K](write_your_repository)        | 69.10 / 83.29         | 73.98     | 73.47     | 82.7      | 75.86     | 88.94     | 89.07     | 68.65     | 67.20     |
-| Morpheme               | [32K](write_your_repository)     | 68.05 / 83.82         | 74.86     | 74.37     | 82.37     | 76.83     | 87.87     | 88.04     | 69.3      | 67.20     |
-| Subword                | [32K](write_your_repository)       | **74.04** / 86.30     | *74.74*   | 74.29     | 83.02     | 77.01     | *89.39*   | *89.38*   | 74.05     | 70.95     |
-| Morpheme-aware Subword | [32K](write_your_repository) | *72.65* / *86.35*     | 74.1      | 75.13     | 83.65     | **78.11** | 89.53     | 89.65     | 74.6      | 71.60     |
-| Word                   | [64K](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| KOMBO(Stroke)          | [130](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| KOMBO(Cji)             | [136](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| KOMBO(BTS)             | [112](write_your_repository)      | 1.54 / 8.86           | 64.06     | 65.83     | 69        | 60.41     | 70.1      | 70.58     | 58.25     | 55.30     |
-| KOMBO(Jamo)            | [170](write_your_repository)      | 59.66 / 73.91         | 70.6      | 71.2      | 77.22     | 71.47     | 87.97     | 87.89     | 58        | 55.20     |
-  
 
-<a id="dataset"></a>
-### Dataset
-abcde
-
-<a id="fine_tuning"></a>
 ### Fine-tuning
-
 For each tokenization strategy, fine-tuning of 5 Korean NLU tasks, KorQuAD, KorNLI, KorSTS, NSMC, and PAWS_X, was performed.<br/>
-- All tasks shared the files corresponding to [bert config](nlu_tasks/utils/bert_config.json), [models](nlu_tasks/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_task.py) and used the individual [config](nlu_tasks/tasks) and [data preprocessing code](nlu_tasks/tasks) files for each tasks. <br/>
-  You can run the fine-tuning of tokenization models for each tasks you want as follows:
+- All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json)), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
+- You can run the fine-tuning of the models for each tasks you want as follows:
 
+  * BERT-base
   ```bash
-  python nlu_tasks/bash_scripts/run_task.py --random_seed 42 \
-  --tok_type ${TOKENIZER} --lang ${LANGUAGE} --tok_vocab_size ${TOK_VOCAB} --bpe_corpus ${BPE_CORPUS} \
-  --ckpt_dir ${CKPT_DIR} --ckpt_file_name {CKPT_FILE} \
-  --task_name ${TASKS}
-
-
-  # TOKENIZER = {jamo, char, morpheme, subword, morphemeSubword, word, stroke, cji, bts}
-  # LANGUAGE = {ko, en}
+  python nlu_tasks/scripts/run_finetuning.py --random_seed 42 \
+  --tok_type ${TOKENIZER} --tok_vocab_size ${TOK_VOCAB} \
+  --model_name bert-base \
+  --optimizer adamw --lr_scheduler linear \
+  --save_dir token_fusing/logs/bert-base/morphemeSubword_ko_wiki_32k/pretraining/128t_128b_1s_5e-05lr_42rs/ckpt --task_name KorSTS \
+  --task_name ${TASK}
+  
+  
+  # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
   # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
-  # BPE_CORPUS = {wiki, aihub}
-
-  # CKPT_DIR = {Pre-training: ckpt  |  checkpoint-300000
-  #             Fine-tuning: 128b_1s_42rs/ckpt  |  128b_1s_42rs/checkpoint-300000}
-  # CKPT_FILE = {pytorch_model.bin  |  final_steps.ckpt}
-
-  # TASKS = {KorQuAD, KorNLI, KorSTS, NSMC, PAWS_X}
-  ```
-
-- If you want to do all 5 Korean NLU tasks, you can do it by runnig the following.
-  ```bash
-  bash bash_scripts/nlu_tasks/all_tasks.sh ${CUDA} ${TOKENIZER} ${TOK_VOCAB} ${CKPT_DIR} ${CKPT_FILE}
-
-  # options are the same as above.
+  # SAVE = [Your checkpoint of the model. e.g., "logs/bert-base/morphemeSubword_ko_wiki_32k/pretraining/128t_128b_1s_5e-05lr_42rs/ckpt"]
+  # TASK = {KorQuAD, KorNLI, KorSTS, NSMC, PAWS_X}
   ```
   
+  * KOMBO-base
+  ```bash
+  python nlu_tasks/scripts/run_finetuning.py --random_seed 42 \
+  --tok_type ${TOKENIZER} --tok_vocab_size 200 \
+  --model_name kombo-base --mlm_unit ${MASKING} --jamo_fusion ${COMBINATION} --jamo_trans_layer 3 \
+  --upsampling ${RESTORATION} --upsampling_residual True \
+  --optimizer adamw --lr_scheduler linear \
+  --task_name ${TASK} \
+  
+  
+  # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
+  # MASKING = {token, character}
+  # COMBINATION = {
+    KOMBO: trans_gru_conv1,
+    KOMBO w/o contextualization: conv1,
+    KOMBO w/ (2x2 kernel): trans_gru_conv,
+    KOMBO w/ (2x3 kernel): trans_gru_conv3,
+    KOMBO w/ (2x1 + 2x2 kernel): conv2,
+    KOMBO w/ attention_pooling: trans_attention_pool,
+    KOMBO w/ linear_pooling: trans_linear_pool,
+  }
+  # RESTORATION = {
+    linear, repeat_linear, gru, repeat_gru
+  }
+  # SAVE = [Your checkpoint of the model. e.g., "logs/kombo-base/jamo_distinct_ko_200/pretraining/span-character-mlm_jamo-trans3_gru_conv1-cjf_repeat_gru-up-res_128t_128b_1s_5e-05lr_42rs/ckpt"]
+  # TASK = {KorQuAD, KorNLI, KorSTS, NSMC, PAWS_X}
+  # Notice) You should set `ignore_structure` option to "True", when you reconstruct the downsampling methods of Funnel(attention_pooling) or Hourglass(linear_pooling) Transformer in KOMBO.
+  ```
 <br/>
 <br/>
 
 
 
 ## Noisy Korean Datasets
+#### Performance of the models on NLU tasks with typological errors.
+<img src='assets/TypoData.png' width='800'>
 
-  <a id="task1"></a>
-  ### Typo Data
-  abcdef
-    <a id="dataset1"></a>
-    #### Dataset
-    abcdef
-    <a id="fine_tuning1"></a>
-    #### Fine-tuning
-    abcdef
+### Fine-tuning
+abcdef
+<a id="toxic_datasets"></a>
 
-  <a id="task2"></a>
-  ### Toxic Data
-  abcdef
-    <a id="dataset2"></a>
-    #### Dataset
-    abcdef
-    <a id="fine_tuning2"></a>
-    #### Fine-tuning
-    abcdef
+
+## Toxic Data
+#### Evaluation results for the robustness of the models on three toxic datasets.
+<img src='assets/ToxicData.png' width='800'>
+
+<a id="toxic_data"></a>
+### Dataset
+abcdef
+
+<a id="fine_tuning"></a>
+### Fine-tuning
+abcdef
 
 <br/>
 <br/>
