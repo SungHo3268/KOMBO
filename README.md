@@ -18,15 +18,15 @@
   <li>
     <a href="#pretraining">Pre-training</a>
     <ol>
-      <li><a href="#pretraining_data">1. Dataset</a></li>
-      <li><a href="#run_pretraining">2. Run Training</a></li>
-      <li><a href="#pretrained_models">3. Baselines</a></li>
+      <li><a href="#pretraining_data">Datasets</a></li>
+      <li><a href="#run_pretraining">Run Training</a></li>
+      <li><a href="#pretrained_models">Baselines</a></li>
     </ol>
   </li>
   <li>
     <a href="#standard_korean_datasets">Standard Korean Datasets</a>
     <ol>
-      <li><a href="#nlu_datasets">Dataset</a></li>
+      <li><a href="#nlu_datasets">Datasets</a></li>
       <li><a href="#nlu_finetuning">Fine-tuning</a></li>
     </ol>
   </li>
@@ -40,7 +40,7 @@
   <li>
     <a href="#toxic_datasets">Toxic Datasets</a>
     <ol>
-      <li><a href="#toxic_datasets">Dataset</a></li>
+      <li><a href="#toxic_datasets">Datasets</a></li>
       <li><a href="#toxic_finetuning">Fine Tuning</a></li>
     </ol>
   </li>
@@ -88,7 +88,7 @@
 * The corpus used for building vocabulary and training BPE models is as follows, which was extracted and refined via [attardi/wikiextractor](https://github.com/attardi/wikiextractor).<br/>
   > Notice)<br/>
   > To reproduce the baseline, we use the 0.1 version of the wikiextractor.<br/>
-  > We use the latest version of the wiki dump dataset for both Korean and English. We use the data dated 20220923. <br/>
+  > We use the latest version of the wiki dump datasets for both Korean and English. We use the data dated 20220923. <br/>
   > You can download the dump data [here](write_your_repository).
   
   - Korean Wikipedia: <https://dumps.wikimedia.org/kowiki>
@@ -183,7 +183,7 @@
 ## 3. Pre-training
 
 <a id="pretraining_data"></a>
-### i. Dataset
+### i. Datasets
 
 - Because the Korean Wiki corpus(20220923) (753 MB) is not enough in volume for the pre-training purpose, we additionally downloaded the recent dump of [Namuwiki corpus(20190312) (5.5 GB)](https://namu.wiki/w/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4:%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4%20%EB%8D%A4%ED%94%84) and extracted plain texts using [Namu Wiki Extractor](https://github.com/jonghwanhyeon/namu-wiki-extractor/tree/4d864d2f7da1d4cb767c22d82f91fe2912007e4b) with adding document seperation(<code>'\n'</code>) per article.
   ```bash
@@ -209,7 +209,7 @@
 ### ii. Run Training
 
 For  each  tokenization  strategy,  pre-training of BERT-Base model (Devlin et al., 2019)  was  performed with a Huggingface and Pytorch library.
-- Trim original dataset (remove doc seperator, space) and Make the corpus and labels for NSP task for each tasks. It returns the `sentence_as.txt`, `sentence_bs.txt`, and `nsp_labels.txt`. <br/>
+- Trim original datasets (remove doc seperator, space) and make the corpus and labels for NSP task for each tasks. It returns the `sentence_as.txt`, `sentence_bs.txt`, and `nsp_labels.txt`. <br/>
 We preprocessed the input segments by referring the [official BERT code](https://github.com/google-research/bert/blob/master/create_pretraining_data.py).<br/>
     
     
@@ -409,7 +409,7 @@ You can find the pre-trained models [here](write_your_repository).
 <img src='assets/ToxicData.png' width='800'>
 
 <a id="toxic_datasets"></a>
-### i. Dataset
+### i. Datasets
 - we experiment on three Korean offensive language datasets. BEEP! dataset is a binary classification task. K-MHaS and KOLD both are the multi-label classification tasks.
   - BEEP! ([Moon et al., 2020](https://aclanthology.org/2020.socialnlp-1.4/))
   - K-MHaS ([Lee et al., 2022](https://aclanthology.org/2022.coling-1.311/))
