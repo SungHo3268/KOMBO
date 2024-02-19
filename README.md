@@ -294,7 +294,7 @@ You can find the pre-trained models [here](write_your_repository).
   --model_name bert-base \
   --optimizer adamw --lr_scheduler linear \
   --save_dir ${SAVE} --task_name ${TASK} \
-  --task_name ${TASK}
+  --remain_lang ko_en_punc --do_hangeulize True --data_remove True
   
   # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
   # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
@@ -311,6 +311,7 @@ You can find the pre-trained models [here](write_your_repository).
   --upsampling ${RESTORATION} --upsampling_residual True \
   --optimizer adamw --lr_scheduler linear \
   --save_dir ${SAVE} --task_name ${TASK} \
+  --remain_lang ko_en_punc --do_hangeulize True --data_remove True
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
@@ -354,6 +355,7 @@ You can find the pre-trained models [here](write_your_repository).
   --model_name bert-base \
   --optimizer adamw --lr_scheduler linear \
   --save_dir ${SAVE} --task_name ${TASK} \
+  --remain_lang ko_en_punc --do_hangeulize True --data_remove True \
   --typo_type ${TYPO} --typo_rates 0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40
   
   # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
@@ -371,7 +373,9 @@ You can find the pre-trained models [here](write_your_repository).
   --model_name kombo-base --mlm_unit ${MASKING} --jamo_fusion ${COMBINATION} --jamo_trans_layer 3 \
   --upsampling ${RESTORATION} --upsampling_residual True \
   --optimizer adamw --lr_scheduler linear \
-  --task_name ${TASK}  --typo_rates 0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40
+  --save_dir ${SAVE} --task_name ${TASK} \
+  --remain_lang ko_en_punc --do_hangeulize True --data_remove True \
+  --typo_type ${TYPO} --typo_rates 0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
@@ -420,6 +424,7 @@ You can find the pre-trained models [here](write_your_repository).
   --model_name bert-base \
   --optimizer adamw --lr_scheduler linear \
   --save_dir ${SAVE} --task_name ${TASK} \
+  --remain_lang ko_en_punc --do_hangeulize True --data_remove False
   
   # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
   # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
@@ -436,6 +441,7 @@ You can find the pre-trained models [here](write_your_repository).
   --upsampling ${RESTORATION} --upsampling_residual True \
   --optimizer adamw --lr_scheduler linear \
   --save_dir ${SAVE} --task_name ${TASK} \
+  --remain_lang ko_en_punc --do_hangeulize True --data_remove False
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
