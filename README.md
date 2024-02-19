@@ -345,7 +345,10 @@ You can find the pre-trained models [here](write_your_repository).
 <a id="typo_finetuning"></a>
 ### i. Fine-tuning
 - All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) across all tasks and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
-- These are basically the same as Korean NLU tasks, except the <ins>typo type</ins> and <ins>typo rates</ins> settings.
+  These are basically the same as Korean NLU tasks, except the <ins>typo type</ins> and <ins>typo rates</ins> settings.
+- We implement four different typological error generating methods, such as Insert, Transpose, Substitue, and Delete. <br/>
+  You should set the `typo_type` among random, insert, transpose, substitute, and delete.
+
 - We conduct this experiment <ins>using pre-trained language models on Korean NLU tasks</ins> and <ins>only do test</ins> on typo environments.
 - You can run the fine-tuning of the models for each tasks you want as follows:
   
@@ -433,8 +436,8 @@ You can find the pre-trained models [here](write_your_repository).
   # SAVE = [Your checkpoint of the model. e.g., "logs/bert-base/morphemeSubword_ko_wiki_32k/pretraining/128t_128b_1s_5e-05lr_42rs/ckpt"]
   # TASK = {BEEP, KMHaS, KOLD}
   ```
-
-
+  
+  
   * KOMBO-base
   ```bash
   python nlu_tasks/scripts/run_finetuning.py --random_seed 42 \
