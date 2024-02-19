@@ -8,8 +8,9 @@ plt.rcParams['text.usetex'] = False
 plt.rcParams['font.family'] = 'sans-serif'
 
 df = pd.read_excel("typo/assets/typo_test_results.xlsx", sheet_name=None)
-df.pop("PAWS-X")
-df.pop("NSMC")
+df.pop("KorNLI")
+# df.pop("PAWS-X")
+# df.pop("NSMC")
 
 color_settings = {'Jamo': 'mediumseagreen',
                   'Character': 'mediumpurple',
@@ -34,20 +35,20 @@ for i, task_name in enumerate(df):
     x = [str(int(n * 100)) for n in cur_df["noise"]]
     x_val = np.arange(len(x))
     ax = axes[i]
-    ax.text(.5, .9, task_name,
+    ax.text(.5, 1.05, task_name,
             horizontalalignment='center',
             transform=ax.transAxes,
-            fontsize=25,
+            fontsize=20,
             fontweight='bold')
     ax.set_xticks(x_val)
-    ax.set_xticklabels(x, fontsize=15)
-    ax.tick_params(axis='y', labelsize=15)
-    ax.set_xlabel("Typo Ratio (%)", fontsize=20, labelpad=10)
+    ax.set_xticklabels(x, fontsize=13)
+    ax.tick_params(axis='y', labelsize=13)
+    ax.set_xlabel("Typo Ratio (%)", fontsize=15)
     if i == 0:
-        ax.set_ylabel("Accuracy (%)", fontsize=20, labelpad=15)
+        ax.set_ylabel("Accuracy (%)", fontsize=15)
     else:
         ax.set_ylabel(None)
-    ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.f'))
 
     if task_name == 'PAWS-X':
         sota_baseline = "Subword"
@@ -68,7 +69,7 @@ for i, task_name in enumerate(df):
     hem_y = [acc for acc in cur_df["KOMBO (Jamo)"]]
 
     # fill the area between MorSubword and HALLA(Jamo), which are the baseline SOTA and our method SOTA, respectively.
-    ax.fill_between(x, baseline_y, hem_y, alpha=0.15, color="grey")
+    ax.fill_between(x, baseline_y, hem_y, alpha=0.2, color="grey")
 
     # Add the arrow to show and stress the difference between MorSubword and HALLA(Jamo)
     # for j in range(len(x)):
@@ -77,8 +78,10 @@ for i, task_name in enumerate(df):
     #                 xytext=(x_val[j], max(MorSubword_y[j], hem_y[j])),
     #                 arrowprops=dict(arrowstyle="<->", color='black', lw=1.5),
     #                 )
-    ax.legend(loc="lower left", fontsize=14)
+    legend = ax.legend(loc="best", fontsize=11, facecolor='white', framealpha=1, edgecolor='black')
+    legend.get_frame().set_facecolor('white')
+
 
 plt.tight_layout()
-plt.savefig("/data2/user13/workspace/KOMBO/typo/assets/typo_test_results.pdf", format='pdf')
+# plt.savefig("typo/assets/typo_test_results.pdf", format='pdf')
 plt.show()

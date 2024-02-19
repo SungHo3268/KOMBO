@@ -198,7 +198,8 @@ def plot_similarity(src_vectors, tgt_vectors, tgt_tokens, tgt_words, activation=
         # im = ax.imshow(np.array(similarities).reshape(1, -1), cmap='Blues', vmin=0, vmax=1, aspect='auto')
         # im = ax.imshow(np.array(similarities).reshape(1, -1), cmap='Reds', vmin=0, vmax=1, aspect='auto')
         # im = ax.imshow(np.array(similarities).reshape(1, -1), cmap='Greens', vmin=0, vmax=1, aspect='auto')
-        im = ax.imshow(np.array(similarities).reshape(1, -1), cmap='Purples', vmin=0, vmax=1, aspect='auto')
+        # im = ax.imshow(np.array(similarities).reshape(1, -1), cmap='Purples', vmin=0, vmax=1, aspect='auto')
+        im = ax.imshow(np.array(similarities).reshape(1, -1), cmap='gray_r', vmin=0, vmax=1, aspect='auto')
 
     # cbar = ax.cax.colorbar(im)
     cbar = grid.cbar_axes[0].colorbar(im)
@@ -211,14 +212,16 @@ def plot_similarity(src_vectors, tgt_vectors, tgt_tokens, tgt_words, activation=
 
 
 if __name__ == "__main__":
-    trainer = load_model(tok_type='char', no_context=False)    # tok_type = {"jamo_distinct", "char"}
+    trainer = load_model(tok_type='jamo_distinct', no_context=False)    # tok_type = {"jamo_distinct", "char"}
 
     # tgt_sentence = "물이 많아 밥이 질어져 진밥을 먹게 되었다."
     # tgt_words = ['질', '진']
     # tgt_sentence = "흐르는 개천은 강물과 만나 바다로 흘러 간다."
     # tgt_words = ['흐', '흘']
-    tgt_sentence = "다른 사람을 도와 주는 것은 나를 돕는 것이다."
-    tgt_words = ['도', '돕']
+    # tgt_sentence = "다른 사람을 도와 주는 것은 나를 돕는 것이다."
+    # tgt_words = ['도', '돕']
+    tgt_sentence = "희미하게 들리는 소리를 듣기 위해 집중했다."
+    tgt_words = ['들', '듣']
 
     tgt_tokens = ['[CLS]'] + char_tokenizer.tokenize(tgt_sentence) + ['[SEP]']
     tgt_tokens = [token.replace("▁", " ") for token in tgt_tokens]
