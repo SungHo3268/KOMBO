@@ -111,6 +111,7 @@ class ArgsBase:
         parent_parser = self.add_finetune_args(description)
         parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning Typo Tasks")
 
+        parser.add_argument('--typo_type', type=str, default="random", required=True, help="random  |  insert  |  transpose  |  substitute  |  delete")
         parser.add_argument('--typo_rates', type=str, default="0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40", required=True)
         return parser
 

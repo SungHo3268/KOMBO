@@ -58,7 +58,7 @@ def load_task_dataset(typo_type, typo_rate, remain_lang="ko_en_punc", do_hangeul
                 sentence = dataset['sentence'][i]
                 label = dataset['label'][i]
 
-                sentence = generate_typo(sentence, typo_type=typo_type, typo_level="jamo", typo_rate=typo_rate)
+                sentence = generate_typo(sentence, typo_type=typo_type, typo_rate=typo_rate)
 
                 new_dataset['sentence'].append(sentence)
                 new_dataset['label'].append(label)
@@ -71,4 +71,4 @@ def load_task_dataset(typo_type, typo_rate, remain_lang="ko_en_punc", do_hangeul
 
 
 if __name__ == '__main__':
-    data = load_task_dataset(typo_type="all", typo_rate=0.1, remain_lang="ko_en_punc", do_hangeulize=True, data_remove=True)
+    data = load_task_dataset(typo_type="random", typo_rate=0.1, remain_lang="ko_en_punc", do_hangeulize=True, data_remove=True)
