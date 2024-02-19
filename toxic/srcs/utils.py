@@ -21,10 +21,6 @@ def get_task_model(args, tokenizer):
         model = KMHaSModel(config)
     elif args.task_name.lower() == 'beep':
         model = BEEPModel(config)
-        if args.binary:
-            config.update({"num_labels": 2})
-        else:
-            config.update({"num_labels": 3})
     else:
         raise ValueError(f"Invalid task name: {args.task_name}")
 

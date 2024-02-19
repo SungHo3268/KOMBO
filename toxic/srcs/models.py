@@ -18,7 +18,10 @@ class BEEPModel(nn.Module):
             self.bert = BertModel(config)
 
         self.dropout = nn.Dropout(self.config.hidden_dropout_prob)
-        self.classifier = nn.Linear(config.hidden_size, config.num_labels)
+        if config.binary:
+            self.classifier = nn.Linear(config.hidden_size, 2)
+        else:
+            self.classifier = nn.Linear(config.hidden_size, 3)
 
     def forward(self, inputs):
         outputs = self.bert.forward(**inputs,

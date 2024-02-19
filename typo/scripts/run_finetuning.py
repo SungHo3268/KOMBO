@@ -98,45 +98,31 @@ logger.info(f"learning rate             : {args.learning_rate}")
 logger.info(f"dropout prob              : {args.dropout_rate}")
 logger.info(f"warmup ratio              : {args.warmup_ratio}")
 logger.info(f"max seq len               : {args.max_seq_len}")
+logger.info(f"typo type                 : {args.typo_type}")
 logger.info(f"typo rates                : {args.typo_rates}")
-logger.info(f"pretrained seeds          : {args.pretrained_seed}")
 logger.info(f"log_dir                   : {args.log_dir}\n")
 
 
-total_scores = []
-seeds = [int(seed) for seed in args.pretrained_seed.split("_")]
 typo_rates = [float(ratio) for ratio in args.typo_rates.split("_")]
-for seed in seeds:
-    logger.info(f"========== Typo Evaluation of pre-trained model with ( {seed} ) random seed ==========")
-    args.save_dir = (os.path.join(f"logs/{args.model_name}/{args.tok_name}/nlu_tasks/{args.task_name}/"
-                     f"{prefix}{args.max_seq_len}t_{args.batch_size}b_{args.gradient_accumulation_steps}s_{args.max_epochs}e_{args.learning_rate}lr_{seed}rs", "ckpt"))
-    try:
-        os.path.exists(os.path.join(args.save_dir, "pytorch_model.bin"))
-    except FileNotFoundError:
-        print("Please confirm the 'ckpt' fine-tuned model on NLU tasks.")
+logger.info(f"========== Typo Evaluation of pre-trained model ==========")
 
-    logger.info(f"Declare the Trainer ({args.model_name}) - with ({args.tok_name}) - on ({args.task_name})...")
-    trainer = Trainer(args, logger)
-    logger.info("Succeed to prepare the trainer.\n")
+logger.info(f"Declare the Trainer ({args.model_name}) - with ({args.tok_name}) - on ({args.task_name})...")
+trainer = Trainer(args, logger)
+logger.info("Succeed to prepare the trainer.\n")
 
-    no_decay = ["bias", "LayerNorm", "layernorm", "layer_norm", "ln"]
+no_decay = ["bias", "LayerNorm", "layernorm", "layer_norm", "ln"]
 
-    optimizer_grouped_parameters = [p for n, p in trainer.model.named_parameters() if not any(nd in n for nd in no_decay)]
+optimizer_grouped_parameters = [p for n, p in trainer.model.named_parameters() if not any(nd in n for nd in no_decay)]
 
-    total_trainable_params = sum(p.numel() for p in optimizer_grouped_parameters if p.requires_grad)
-    logger.info(f"Model parameters: {total_trainable_params // 1000000}M\n")
+total_trainable_params = sum(p.numel() for p in optimizer_grouped_parameters if p.requires_grad)
+logger.info(f"Model parameters: {total_trainable_params // 1000000}M\n")
 
-    # logger.info(f"Start the fine-tuning on {args.task_name}.")
-    scores = trainer.fine_tuning(typo_rates)
-    total_scores.append(scores)
-    print("\n")
-
-total_scores = np.array(total_scores)
-avg_scores = np.mean(total_scores, axis=0)
-std = np.std(total_scores, axis=0)
+# logger.info(f"Start the fine-tuning on {args.task_name}.")
+scores = trainer.fine_tuning(args.typo_type, typo_rates)
+print("\n")
 
 logger.info(f"######### Total TYPO RESULTS #########")
 for i, typo_ratio in enumerate(typo_rates):
-    logger.info(f"Typo Ratio {typo_ratio * 100}%: {avg_scores[i] * 100:.2f} ± {std[i]:.2f} [%]")
+    logger.info(f"Typo Ratio {typo_ratio * 100}%: {scores[i] * 100:.2f} [%]")
 logger.info(f"######################################")
 print("\n")

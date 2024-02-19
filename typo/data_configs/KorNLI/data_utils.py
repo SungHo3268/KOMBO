@@ -1,10 +1,8 @@
 import os
 import sys
 import json
-from tqdm import tqdm
 sys.path.append(os.getcwd())
 from typo.srcs.typo_generator import generate_typo
-from pretraining.srcs.functions import BAR_FORMAT
 
 
 """
@@ -28,45 +26,54 @@ When a pair of sentences-a premise and a hypothesis-are given, the model classif
 """
 
 
-def load_task_dataset(typo_ratio, remain_lang="ko_en_punc", do_hangeulize=True, data_remove=True):
+def load_task_dataset(typo_type, typo_rate, remain_lang="ko_en_punc", do_hangeulize=True, data_remove=True):
     task_name = 'KorNLI'
-    data_dir = f"datasets/nlu_tasks/{task_name}/"
-    if do_hangeulize:
-        data_path = os.path.join(data_dir, f'processed_data_{remain_lang}_hangeulized.json')
+
+    typo_dir = f"datasets/typo_tasks/{task_name}/typo_{typo_type}/typo_{typo_rate}%.json"
+    if os.path.exists(typo_dir):
+        total_dataset = json.load(open(typo_dir, "r"))
+
     else:
-        data_path = os.path.join(data_dir, f'processed_data_{remain_lang}.json')
-    if data_remove:
-        data_path = data_path.replace(".json", "_dr.json")
+        os.makedirs(f"datasets/typo_tasks/{task_name}/typo_{typo_type}/", exist_ok=True)
 
-    raw_dataset = json.load(open(data_path, "r"))
-    total_dataset = dict()
+        data_dir = f"datasets/nlu_tasks/{task_name}/"
+        if do_hangeulize:
+            data_path = os.path.join(data_dir, f'processed_data_{remain_lang}_hangeulized.json')
+        else:
+            data_path = os.path.join(data_dir, f'processed_data_{remain_lang}.json')
+        if data_remove:
+            data_path = data_path.replace(".json", "_dr.json")
 
-    label_map = raw_dataset['label_map']
-    all_data_path = ['dev', 'test']
+        raw_dataset = json.load(open(data_path, "r"))
+        total_dataset = dict()
 
-    for d_type in all_data_path:
-        dataset = raw_dataset[d_type]
-        new_dataset = {'sentence1': [],
-                       'sentence2': [],
-                       'label': [],
-                       }
-        for i in range(len(dataset['label'])):
-            sentence1 = dataset['sentence1'][i]
-            sentence2 = dataset['sentence2'][i]
-            label = dataset['label'][i]
+        label_map = raw_dataset['label_map']
+        all_data_path = ['dev', 'test']
 
-            sentence1 = generate_typo(sentence1, typo_level="jamo", typo_ratio=typo_ratio)
-            sentence2 = generate_typo(sentence2, typo_level="jamo", typo_ratio=typo_ratio)
+        for d_type in all_data_path:
+            dataset = raw_dataset[d_type]
+            new_dataset = {'sentence1': [],
+                        'sentence2': [],
+                        'label': [],
+                        }
+            for i in range(len(dataset['label'])):
+                sentence1 = dataset['sentence1'][i]
+                sentence2 = dataset['sentence2'][i]
+                label = dataset['label'][i]
 
-            new_dataset['sentence1'].append(sentence1)
-            new_dataset['sentence2'].append(sentence2)
-            new_dataset['label'].append(label)
+                sentence1 = generate_typo(sentence1, typo_type, typo_level="jamo", typo_rate=typo_rate)
+                sentence2 = generate_typo(sentence2, typo_type, typo_level="jamo", typo_rate=typo_rate)
 
-        total_dataset[d_type] = new_dataset
+                new_dataset['sentence1'].append(sentence1)
+                new_dataset['sentence2'].append(sentence2)
+                new_dataset['label'].append(label)
 
-    total_dataset['label_map'] = label_map
+            total_dataset[d_type] = new_dataset
+
+        total_dataset['label_map'] = label_map
+        json.dump(total_dataset, open(typo_dir, "w"), indent=4)
     return total_dataset
 
 
 if __name__ == '__main__':
-    data = load_task_dataset(typo_ratio=0.1, remain_lang="ko_en_punc", do_hangeulize=True, data_remove=True)
+    data = load_task_dataset(typo_type="all", typo_rate=0.1, remain_lang="ko_en_punc", do_hangeulize=True, data_remove=True)

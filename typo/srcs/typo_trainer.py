@@ -1,6 +1,5 @@
 import os
 import sys
-import numpy as np
 from tqdm import tqdm
 from scipy.stats import spearmanr
 from sklearn.metrics import accuracy_score
@@ -36,15 +35,15 @@ class Trainer(nn.Module):
 
         self.vocab_size = self.tokenizer.vocab_size
 
-    def get_dataset(self, typo_ratio):
+    def get_dataset(self, typo_type, typo_rate):
         if self.hparams.task_name == 'KorNLI':
-            dataset = KorNLI_dataset(typo_ratio, self.hparams.remain_lang, self.hparams.do_hangeulize, self.hparams.data_remove)
+            dataset = KorNLI_dataset(typo_type, typo_rate, self.hparams.remain_lang, self.hparams.do_hangeulize, self.hparams.data_remove)
         elif self.hparams.task_name == 'KorSTS':
-            dataset = KorSTS_dataset(typo_ratio, self.hparams.remain_lang, self.hparams.do_hangeulize, self.hparams.data_remove)
+            dataset = KorSTS_dataset(typo_type, typo_rate, self.hparams.remain_lang, self.hparams.do_hangeulize, self.hparams.data_remove)
         elif self.hparams.task_name == 'NSMC':
-            dataset = NSMC_dataset(typo_ratio, self.hparams.remain_lang, self.hparams.do_hangeulize, self.hparams.data_remove)
+            dataset = NSMC_dataset(typo_type, typo_rate, self.hparams.remain_lang, self.hparams.do_hangeulize, self.hparams.data_remove)
         elif self.hparams.task_name == 'PAWS_X':
-            dataset = PAWS_X_dataset(typo_ratio, self.hparams.remain_lang, self.hparams.do_hangeulize, self.hparams.data_remove)
+            dataset = PAWS_X_dataset(typo_type, typo_rate, self.hparams.remain_lang, self.hparams.do_hangeulize, self.hparams.data_remove)
         else:
             self.logger.info(
                 "It's a Wrong Task Name. Please enter the right task name among [KorNLI, KorSTS, NSMC, PAWS_X]")
@@ -63,7 +62,7 @@ class Trainer(nn.Module):
             new_dataset[key] = [dataset[key][i*self.hparams.batch_size: (i+1)*self.hparams.batch_size] for i in range(batch_num)]
         return new_dataset
 
-    def get_input(self, dataset, typo_ratio):
+    def get_input(self, dataset):
         batched_dataset = self._batch_dataset(dataset)
 
         if self.hparams.task_name in ['KorNLI', 'KorSTS', 'PAWS_X']:
@@ -78,7 +77,6 @@ class Trainer(nn.Module):
             raise NotImplementedError
 
         inputs = []
-        # for i in tqdm(range(len(labels)), desc=f"Getting inputs for Typo {typo_ratio*100}%", bar_format=BAR_FORMAT):
         for i in range(len(labels)):
             encoded_input = self.tokenizer(sentence1s[i], sentence2s[i], truncation=True, padding="max_length",
                                            max_length=self.hparams.max_seq_len, return_tensors="pt")
@@ -94,16 +92,16 @@ class Trainer(nn.Module):
         outputs = self._forward(inputs, labels)
         return outputs
 
-    def _evaluation(self, eval_dataset, typo_ratio):
+    def _evaluation(self, eval_dataset):
         self.model.eval()
 
-        inputs, labels = self.get_input(eval_dataset, typo_ratio)
+        inputs, labels = self.get_input(eval_dataset)
         batch_num = len(inputs)
 
         targets = []
         predictions = []
         with torch.no_grad():
-            # for i in tqdm(range(batch_num), desc=f"Evaluation for Typo {typo_ratio*100}%...", bar_format=BAR_FORMAT, total=batch_num):
+            # for i in tqdm(range(batch_num), desc=f"Evaluation for Typo {typo_rate*100}%...", bar_format=BAR_FORMAT, total=batch_num):
             for i in range(batch_num):
                 batch = inputs[i]
                 for key in batch:       # keys are {token_ids, attention_mask, token_type_ids, (start_positions), (end_positions)}
@@ -129,14 +127,14 @@ class Trainer(nn.Module):
         assert len(targets) == len(predictions)
         return targets, predictions
 
-    def fine_tuning(self, typo_rates):
+    def fine_tuning(self, typo_type, typo_rates):
         scores = []
-        for typo_ratio in tqdm(typo_rates, desc=f"Evaluation...", bar_format=BAR_FORMAT, total=len(typo_rates)):
-            test_dataset = self.get_dataset(typo_ratio)["test"]
+        for typo_rate in tqdm(typo_rates, desc=f"Evaluation...", bar_format=BAR_FORMAT, total=len(typo_rates)):
+            test_dataset = self.get_dataset(typo_type, typo_rate)["test"]
 
-            test_targets, test_predictions = self._evaluation(test_dataset, typo_ratio)
+            test_targets, test_predictions = self._evaluation(test_dataset)
             test_score = self.metric_results(test_targets, test_predictions)
-            scores.append(round(test_score, 4))
+            scores.append(test_score)
 
         return scores
 

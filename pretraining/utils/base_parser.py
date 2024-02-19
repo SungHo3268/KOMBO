@@ -112,7 +112,6 @@ class ArgsBase:
         parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning Typo Tasks")
 
         parser.add_argument('--typo_rates', type=str, default="0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40", required=True)
-        parser.add_argument('--pretrained_seed', type=str, default="2739_7848_7295", required=True)
         return parser
 
     def add_toxic_task_args(self, description="Fine_tuning Toxic Tasks"):
@@ -120,8 +119,7 @@ class ArgsBase:
         parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning Toxic Tasks")
         # for BEEP
         parser.add_argument('--binary', type=_bool, default=True)
-        parser.add_argument('--num_labels', type=int, default=2)
         # for KOLD
-        parser.add_argument('--label_level', type=str, default="A", required=True, help="A  |  B  |  C")
-        parser.add_argument('--split_ratio', type=str, default="0.8_0.1_0.1", help="train_dev_test")
+        parser.add_argument('--label_level', type=str, default="C", required=True, help="A  |  B  |  C")
+        parser.add_argument('--split_rates', type=str, default="0.8_0.1_0.1", help="train_dev_test")
         return parser
