@@ -8,12 +8,10 @@ import torch
 from torch.utils.data import SequentialSampler, RandomSampler, DataLoader, ConcatDataset
 from transformers.data.metrics.squad_metrics import compute_predictions_logits, squad_evaluate
 
-from token_fusing.srcs.functions import init_random, float_separator
-from token_fusing.srcs.functions import BAR_FORMAT
-from token_fusing.nlu_configs.KorQuAD.evaluate_v1_0 import eval_during_train
-from token_fusing.srcs.nlu_utils import get_optimizer, get_lr_scheduler
-from token_fusing.srcs.nlu_utils import get_bert_tokenizer, get_task_model
-from token_fusing.srcs.custom_squad import SquadResult, SquadV1Processor, SquadV2Processor, squad_convert_examples_to_features
+from pretraining.srcs.functions import init_random, float_separator, BAR_FORMAT
+from nlu_tasks.nlu_configs.KorQuAD.evaluate_v1_0 import eval_during_train
+from nlu_tasks.srcs.nlu_utils import get_optimizer, get_lr_scheduler, get_bert_tokenizer, get_task_model
+from nlu_tasks.srcs.custom_squad import SquadResult, SquadV1Processor, SquadV2Processor, squad_convert_examples_to_features
 
 
 def to_list(tensor):
