@@ -41,8 +41,8 @@ class ArgsBase:
 
         # TokenFusingModule
         parser.add_argument('--jamo_fusion', type=str)
-        parser.add_argument('--jamo_residual', type=_bool)
-        parser.add_argument('--cho_joong_first', type=_bool)
+        parser.add_argument('--jamo_residual', type=_bool, default=False)
+        parser.add_argument('--cho_joong_first', type=_bool, default=True)
         parser.add_argument('--jamo_trans_layer', type=int)
         # For Funnel-Transformer and Hourglass-Transformer
         parser.add_argument('--ignore_structure', type=_bool, default=False)
