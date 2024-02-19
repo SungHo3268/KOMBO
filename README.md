@@ -224,10 +224,10 @@ We preprocessed the input segments by referring the [official BERT code](https:/
   --max_seq_len 128 --batch_size 128 --gradient_accumulation_steps 1 \
   --learninig_rate 5e-05 --max_grad_norm 1. --total_steps 1_000_000 --num_warmup_steps 10_000 \
 
-  
   # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
   # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
   ```
+
 
   * KOMBO-base
   ```bash
@@ -237,7 +237,6 @@ We preprocessed the input segments by referring the [official BERT code](https:/
   --upsampling ${RESTORATION} --upsampling_residual True \
   --max_seq_len 128 --batch_size 128 --gradient_accumulation_steps 1 \
   --learninig_rate 5e-05 --max_grad_norm 1. --total_steps 1_000_000 --num_warmup_steps 10_000 \
-  
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
@@ -297,12 +296,12 @@ You can find the pre-trained models [here](write_your_repository).
   --save_dir ${SAVE} --task_name ${TASK} \
   --task_name ${TASK}
   
-  
   # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
   # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
   # SAVE = [Your checkpoint of the model. e.g., "logs/bert-base/morphemeSubword_ko_wiki_32k/pretraining/128t_128b_1s_5e-05lr_42rs/ckpt"]
   # TASK = {KorQuAD, KorNLI, KorSTS, NSMC, PAWS_X}
   ```
+
   
   * KOMBO-base
   ```bash
@@ -312,7 +311,6 @@ You can find the pre-trained models [here](write_your_repository).
   --upsampling ${RESTORATION} --upsampling_residual True \
   --optimizer adamw --lr_scheduler linear \
   --save_dir ${SAVE} --task_name ${TASK} \
-  
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
@@ -358,13 +356,13 @@ You can find the pre-trained models [here](write_your_repository).
   --save_dir ${SAVE} --task_name ${TASK} \
   --typo_type ${TYPO} --typo_rates 0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40
   
-  
   # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
   # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
   # SAVE = [Your checkpoint of the model. e.g., "logs/bert-base/morphemeSubword_ko_wiki_32k/nlu_tasks/KorNLI/128t_16b_4s_3e_0.0001lr_2739rs/ckpt"]
   # TYPO = {random, insert, transpose, substitute, delete}
   # TASK = {KorQuAD, KorNLI, KorSTS, NSMC, PAWS_X}
   ```
+
   
   * KOMBO-base
   ```bash
@@ -374,7 +372,6 @@ You can find the pre-trained models [here](write_your_repository).
   --upsampling ${RESTORATION} --upsampling_residual True \
   --optimizer adamw --lr_scheduler linear \
   --task_name ${TASK}  --typo_rates 0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40
-  
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
@@ -423,15 +420,14 @@ You can find the pre-trained models [here](write_your_repository).
   --model_name bert-base \
   --optimizer adamw --lr_scheduler linear \
   --save_dir ${SAVE} --task_name ${TASK} \
-  --task_name ${TASK}
-  
   
   # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
   # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
   # SAVE = [Your checkpoint of the model. e.g., "logs/bert-base/morphemeSubword_ko_wiki_32k/pretraining/128t_128b_1s_5e-05lr_42rs/ckpt"]
   # TASK = {BEEP, KMHaS, KOLD}
   ```
-  
+
+
   * KOMBO-base
   ```bash
   python nlu_tasks/scripts/run_finetuning.py --random_seed 42 \
@@ -440,7 +436,6 @@ You can find the pre-trained models [here](write_your_repository).
   --upsampling ${RESTORATION} --upsampling_residual True \
   --optimizer adamw --lr_scheduler linear \
   --save_dir ${SAVE} --task_name ${TASK} \
-  
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
