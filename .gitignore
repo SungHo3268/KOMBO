@@ -14,3 +14,4 @@ __pycache__/
 *.out
 *.bin
 mecab*/
+analysis/
