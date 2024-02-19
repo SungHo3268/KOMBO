@@ -236,19 +236,19 @@ We preprocessed the input segments by referring the [official BERT code](https:/
   
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
-  # MASKING = {token, character}  
+  # MASKING = {token, character}
   # COMBINATION = {
-    KOMBO: trans_gru_conv1,
-    KOMBO w/o contextualization: conv1,
-    KOMBO w/ (2x2 kernel): trans_gru_conv,
-    KOMBO w/ (2x3 kernel): trans_gru_conv3,
-    KOMBO w/ (2x1 + 2x2 kernel): conv2,
-    KOMBO w/ attention_pooling: trans_attention_pool,
-    KOMBO w/ linear_pooling: trans_linear_pool,
-  }
+  #   KOMBO: trans_gru_conv1,
+  #   KOMBO w/o contextualization: conv1,
+  #   KOMBO w/ (2x2 kernel): trans_gru_conv,
+  #   KOMBO w/ (2x3 kernel): trans_gru_conv3,
+  #   KOMBO w/ (2x1 + 2x2 kernel): conv2,
+  #   KOMBO w/ attention_pooling: trans_attention_pool,
+  #   KOMBO w/ linear_pooling: trans_linear_pool,
+  # }
   # RESTORATION = {
-    linear, repeat_linear, gru, repeat_gru
-  }
+  #   linear, repeat_linear, gru, repeat_gru
+  # }
   # Notice) You should set `ignore_structure` option to "True", when you reconstruct the downsampling methods of Funnel(attention_pooling) or Hourglass(linear_pooling) Transformer in KOMBO.
   ```
 
@@ -270,17 +270,18 @@ You can find the pre-trained models [here](write_your_repository).
 
 <a id="nlu_datasets"></a>
 ### Datasets
-For each tokenization strategy, fine-tuning of 5 Korean NLU tasks, KorQuAD, KorNLI, KorSTS, NSMC, and PAWS_X, was performed.
-- KorQuAD 1.0 ([Lim et al., 2019](https://arxiv.org/abs/1909.07005))
-- KorNLI ([Ham et al., 2020](https://aclanthology.org/2020.findings-emnlp.39/))
-- KorSTS ([Ham et al., 2020](https://aclanthology.org/2020.findings-emnlp.39/))
-- NSMC ([Park, 2016](https://github.com/e9t/nsmc))
-- PAWS-X ([Yang et al., 2019](https://aclanthology.org/D19-1382/))
+- For each tokenization strategy, fine-tuning of 5 Korean NLU tasks, KorQuAD, KorNLI, KorSTS, NSMC, and PAWS_X, was performed.
+  - KorQuAD 1.0 ([Lim et al., 2019](https://arxiv.org/abs/1909.07005))
+  - KorNLI ([Ham et al., 2020](https://aclanthology.org/2020.findings-emnlp.39/))
+  - KorSTS ([Ham et al., 2020](https://aclanthology.org/2020.findings-emnlp.39/))
+  - NSMC ([Park, 2016](https://github.com/e9t/nsmc))
+  - PAWS-X ([Yang et al., 2019](https://aclanthology.org/D19-1382/))
+- We preprocess the datasets to remain only two languages, such as Korean and English with puncutations. Then, to fully concentrate on Korean, we convert the English into Korean using [g2pK](https://github.com/Kyubyong/g2pK), which is the convertor transforming from graphemes to phoneme and vice versa.
 
 
 <a id="nlu_finetuning"></a>
 ### Fine-tuning
-- All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
+- All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) across all tasks and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
 - You can run the fine-tuning of the models for each tasks you want as follows:
 
   * BERT-base
@@ -306,23 +307,23 @@ For each tokenization strategy, fine-tuning of 5 Korean NLU tasks, KorQuAD, KorN
   --model_name kombo-base --mlm_unit ${MASKING} --jamo_fusion ${COMBINATION} --jamo_trans_layer 3 \
   --upsampling ${RESTORATION} --upsampling_residual True \
   --optimizer adamw --lr_scheduler linear \
-  --task_name ${TASK} \
+  --task_name ${TASK}
   
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
   # COMBINATION = {
-    KOMBO: trans_gru_conv1,
-    KOMBO w/o contextualization: conv1,
-    KOMBO w/ (2x2 kernel): trans_gru_conv,
-    KOMBO w/ (2x3 kernel): trans_gru_conv3,
-    KOMBO w/ (2x1 + 2x2 kernel): conv2,
-    KOMBO w/ attention_pooling: trans_attention_pool,
-    KOMBO w/ linear_pooling: trans_linear_pool,
-  }
+  #   KOMBO: trans_gru_conv1,
+  #   KOMBO w/o contextualization: conv1,
+  #   KOMBO w/ (2x2 kernel): trans_gru_conv,
+  #   KOMBO w/ (2x3 kernel): trans_gru_conv3,
+  #   KOMBO w/ (2x1 + 2x2 kernel): conv2,
+  #   KOMBO w/ attention_pooling: trans_attention_pool,
+  #   KOMBO w/ linear_pooling: trans_linear_pool,
+  # }
   # RESTORATION = {
-    linear, repeat_linear, gru, repeat_gru
-  }
+  #   linear, repeat_linear, gru, repeat_gru
+  # }
   # SAVE = [Your checkpoint of the model. e.g., "logs/kombo-base/jamo_distinct_ko_200/pretraining/span-character-mlm_jamo-trans3_gru_conv1-cjf_repeat_gru-up-res_128t_128b_1s_5e-05lr_42rs/ckpt"]
   # TASK = {KorQuAD, KorNLI, KorSTS, NSMC, PAWS_X}
   # Notice) You should set `ignore_structure` option to "True", when you reconstruct the downsampling methods of Funnel(attention_pooling) or Hourglass(linear_pooling) Transformer in KOMBO.
@@ -336,9 +337,59 @@ For each tokenization strategy, fine-tuning of 5 Korean NLU tasks, KorQuAD, KorN
 #### Performance of the models on NLU tasks with typological errors.
 <img src='assets/TypoData.png' width='800'>
 
+<a id="typo_finetuning"></a>
 ### Fine-tuning
-abcdef
-<a id="toxic_datasets"></a>
+- All tasks shared the files corresponding to [bert config](pretraining/utils/bert_config.json) or [kombo_config](pretraining/utils/kombo_config.json), [models](pretraining/srcs/models.py), [trainer](nlu_tasks/srcs/task_trainer.py), and [running code](nlu_tasks/scripts/run_finetuning.py) across all tasks and we set the individual [config and data_preprocessing code](nlu_tasks/data_configs/) files for each tasks. <br/>
+- These are basically the same as Korean NLU tasks, except the typo rate settings.
+- You can run the fine-tuning of the models for each tasks you want as follows:
+  
+  * BERT-base
+  ```bash
+  python nlu_tasks/scripts/run_finetuning.py --random_seed 42 \
+  --tok_type ${TOKENIZER} --tok_vocab_size ${TOK_VOCAB} \
+  --model_name bert-base \
+  --optimizer adamw --lr_scheduler linear \
+  --save_dir token_fusing/logs/bert-base/morphemeSubword_ko_wiki_32k/pretraining/128t_128b_1s_5e-05lr_42rs/ckpt --task_name KorSTS \
+  --task_name ${TASK} --typo_rates 0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40
+  
+  
+  # TOKENIZER = {stroke, cji, bts, jamo, char, morpheme, subword, morphemeSubword, word}
+  # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
+  # SAVE = [Your checkpoint of the model. e.g., "logs/bert-base/morphemeSubword_ko_wiki_32k/pretraining/128t_128b_1s_5e-05lr_42rs/ckpt"]
+  # TASK = {KorQuAD, KorNLI, KorSTS, NSMC, PAWS_X}
+  ```
+  
+  * KOMBO-base
+  ```bash
+  python nlu_tasks/scripts/run_finetuning.py --random_seed 42 \
+  --tok_type ${TOKENIZER} --tok_vocab_size 200 \
+  --model_name kombo-base --mlm_unit ${MASKING} --jamo_fusion ${COMBINATION} --jamo_trans_layer 3 \
+  --upsampling ${RESTORATION} --upsampling_residual True \
+  --optimizer adamw --lr_scheduler linear \
+  --task_name ${TASK}  --typo_rates 0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40
+  
+  
+  # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
+  # MASKING = {token, character}
+  # COMBINATION = {
+  #   KOMBO: trans_gru_conv1,
+  #   KOMBO w/o contextualization: conv1,
+  #   KOMBO w/ (2x2 kernel): trans_gru_conv,
+  #   KOMBO w/ (2x3 kernel): trans_gru_conv3,
+  #   KOMBO w/ (2x1 + 2x2 kernel): conv2,
+  #   KOMBO w/ attention_pooling: trans_attention_pool,
+  #   KOMBO w/ linear_pooling: trans_linear_pool,
+  # }
+  # RESTORATION = {
+  #   linear, repeat_linear, gru, repeat_gru
+  # }
+  # SAVE = [Your checkpoint of the model. e.g., "logs/kombo-base/jamo_distinct_ko_200/pretraining/span-character-mlm_jamo-trans3_gru_conv1-cjf_repeat_gru-up-res_128t_128b_1s_5e-05lr_42rs/ckpt"]
+  # TASK = {KorQuAD, KorNLI, KorSTS, NSMC, PAWS_X}
+  # Notice) You should set `ignore_structure` option to "True", when you reconstruct the downsampling methods of Funnel(attention_pooling) or Hourglass(linear_pooling) Transformer in KOMBO.
+  ```
+
+<br/>
+<br/>
 
 
 ## Toxic Data
@@ -347,15 +398,15 @@ abcdef
 
 <a id="toxic_datasets"></a>
 ### Dataset
-we experiment on three Korean offensive language datasets. BEEP! dataset is a binary classification task. K-MHaS and KOLD both are the multi-label classification tasks.
-- BEEP! ([Moon et al., 2020](https://aclanthology.org/2020.socialnlp-1.4/))
-- K-MHaS ([Lee et al., 2022](https://aclanthology.org/2022.coling-1.311/))
-- KOLD ([Jeong et al., 2022](https://aclanthology.org/2022.emnlp-main.744/))
+- we experiment on three Korean offensive language datasets. BEEP! dataset is a binary classification task. K-MHaS and KOLD both are the multi-label classification tasks.
+  - BEEP! ([Moon et al., 2020](https://aclanthology.org/2020.socialnlp-1.4/))
+  - K-MHaS ([Lee et al., 2022](https://aclanthology.org/2022.coling-1.311/))
+  - KOLD ([Jeong et al., 2022](https://aclanthology.org/2022.emnlp-main.744/))
 
 <a id="toxic_finetuning"></a>
 ### Fine-tuning
 - You can run the fine-tuning of the models for each tasks you want as follows:
-
+  
   * BERT-base
   ```bash
   python nlu_tasks/scripts/run_finetuning.py --random_seed 42 \
@@ -379,17 +430,17 @@ we experiment on three Korean offensive language datasets. BEEP! dataset is a bi
   --model_name kombo-base --mlm_unit ${MASKING} --jamo_fusion ${COMBINATION} --jamo_trans_layer 3 \
   --upsampling ${RESTORATION} --upsampling_residual True \
   --optimizer adamw --lr_scheduler linear \
-  --task_name ${TASK} \
+  --task_name ${TASK}
   
   
   # TOKENIZER = {stroke_var, cji_var, bts_var, jamo_distinct}
   # MASKING = {token, character}
   # COMBINATION = {
-    KOMBO: trans_gru_conv1,
-  }
+  #    KOMBO: trans_gru_conv1,
+  # }
   # RESTORATION = {
-    linear, repeat_linear, gru, repeat_gru
-  }
+  #    linear, repeat_linear, gru, repeat_gru
+  # }
   # SAVE = [Your checkpoint of the model. e.g., "logs/kombo-base/jamo_distinct_ko_200/pretraining/span-character-mlm_jamo-trans3_gru_conv1-cjf_repeat_gru-up-res_128t_128b_1s_5e-05lr_42rs/ckpt"]
   # TASK = {BEEP, KMHaS, KOLD}
   # Notice) You should set `ignore_structure` option to "True", when you reconstruct the downsampling methods of Funnel(attention_pooling) or Hourglass(linear_pooling) Transformer in KOMBO.
