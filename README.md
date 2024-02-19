@@ -33,7 +33,7 @@
   <li>
     <a href="#noisy-korean-datasets">Noisy Korean Datasets</a>
     <ul>
-      <li><a href="#typo_finetuning">2. Fine-tuning</a></li>
+      <li><a href="#typo_finetuning">1. Fine-tuning</a></li>
     </ul>
 
   </li>
