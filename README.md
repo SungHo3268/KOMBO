@@ -199,9 +199,9 @@
   ```
 - Concatenate the Korean Wiki corpus and the Namu Wiki corpus.
   ```bash
-  mkdir datasets/nlu_tasks/pretraining
+  mkdir datasets/pretraining
   
-  cat datasets/namuwiki/extracted/clean-doc-namuwiki_20200302.txt datasets/wiki/wikiextracted/clean-doc-ko-wiki-20220923.txt > datasets/nlu_tasks/pretraining/concatenated.txt
+  cat datasets/namuwiki/extracted/clean-doc-namuwiki_20200302.txt datasets/wiki/wikiextracted/clean-doc-ko-wiki-20220923.txt > datasets/pretraining/concatenated.txt
   ```
 
 
