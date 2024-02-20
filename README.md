@@ -76,14 +76,6 @@
 <a id="corpus"></a>
 ### i. Corpus
 
-* Dataset preprocessing
-
-  | Corpus                   | Remove HTML tags  | Remove Empty space  | Punctuation Mapping  | ONLY_REMAIN (Korean/English/Punct)          |
-  | :----------------------: | :---------------: | :-----------------: | :------------------: | :----------------------------------------:  |
-  | Korean Wiki              | O                 | O                   | O                    | O <br/>(for building vocabulary)            |
-  | English Wiki             | O                 | O                   | X                    | X                                           |
-  | Namu Wiki                | O                 | O                   | O                    | O <br/>(same as Korean Wiki)                |
-
 * You can download and preprocess all datasets at once.
   ```bash
   bash install_pipeline.sh
@@ -94,43 +86,51 @@
     bash bash_scripts/installation/download_wiki.sh
 
     bash bash_scripts/installation/clean_wiki.sh
-    ```
-    <details>
-    <summary>More Details</summary>
-    <ol>
-      <li>
-      <a>You can download the dump datasets used for pretraining below.</a>
-        <ul>
-          <li><a href=https://dumps.wikimedia.org/kowiki>Korean Wikipedia</a></li>
-          <li><a href=https://dumps.wikimedia.org/enwiki>English Wikipedia</a></li>
-        </ul>
-      </li>
-      <li>
-        <a>Then we refine the dump dataset via <a href=https://github.com/attardi/wikiextractor>attardi/wikiextractor</a>.<br/>
-          We use the latest version of the wiki dump datasets, which is referred as 20220923, and we utilize the 0.1 version of the wikiextractor.
-        </a>
-        
-        python -m wikiextractor.WikiExtractor {Wiki dump file path} -o {output dir}
-        
-        cat {otuput_dir}/*/* > {final output_file}.txt
-      </li>
-      <li>
-        <a>After applying the wikiextractor to wiki dump data, we appy the <a href=tokenization/scripts/clean_str.py>clean_str.py</a> for preprocessing the corpus.<br/>
-      It returns the <B>clean-{output_file}.txt</B></a>
-        
-        python tokenization/bash_scripts/clean_str.py \
-        --lang ko --corpus_type wiki \
-        --input_corpus datasets/wiki/wikiextracted/ko-wiki-20220923.txt
-      </li>
-    </ol>
-    </details>
-  
+    ```  
   - Namu Wiki dataset
     ```bash
     bash bash_scripts/installation/download_namu.sh
 
     bash bash_scripts/installation/clean_namu.sh
     ```
+* Dataset preprocessing
+
+  | Corpus                   | Remove HTML tags  | Remove Empty space  | Punctuation Mapping  | ONLY_REMAIN (Korean/English/Punct)          |
+  | :----------------------: | :---------------: | :-----------------: | :------------------: | :----------------------------------------:  |
+  | Korean Wiki              | O                 | O                   | O                    | O <br/>(for building vocabulary)            |
+  | English Wiki             | O                 | O                   | X                    | X                                           |
+  | Namu Wiki                | O                 | O                   | O                    | O <br/>(same as Korean Wiki)                |
+
+  <details>
+  <summary>More Detailed Preprocessing Steps for Wiki dataset</summary>
+  <ol>
+    <li>
+    <a>You can download the dump datasets used for pretraining below.</a>
+      <ul>
+        <li><a href=https://dumps.wikimedia.org/kowiki>Korean Wikipedia</a></li>
+        <li><a href=https://dumps.wikimedia.org/enwiki>English Wikipedia</a></li>
+      </ul>
+    </li>
+    <li>
+      <a>Then we refine the dump dataset via <a href=https://github.com/attardi/wikiextractor>attardi/wikiextractor</a>.<br/>
+        We use the latest version of the wiki dump datasets, which is referred as 20220923, and we utilize the 0.1 version of the wikiextractor.
+      </a>
+      
+      python -m wikiextractor.WikiExtractor {Wiki dump file path} -o {output dir}
+      
+      cat {otuput_dir}/*/* > {final output_file}.txt
+    </li>
+    <li>
+      <a>After applying the wikiextractor to wiki dump data, we appy the <a href=tokenization/scripts/clean_str.py>clean_str.py</a> for preprocessing the corpus.<br/>
+    It returns the <B>clean-{output_file}.txt</B></a>
+      
+      python tokenization/bash_scripts/clean_str.py \
+      --lang ko --corpus_type wiki \
+      --input_corpus datasets/wiki/wikiextracted/ko-wiki-20220923.txt
+    </li>
+  </ol>
+  </details>
+
 
   
 <a id="tokenization_baselines"></a>
