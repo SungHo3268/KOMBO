@@ -84,34 +84,7 @@
   | English Wiki             | O                 | O                   | X                    | X                                           |
   | Namu Wiki                | O                 | O                   | O                    | O <br/>(same as Korean Wiki)                |
 
-
-* The corpus used for building vocabulary and training BPE models is as follows, which was extracted and refined via [attardi/wikiextractor](https://github.com/attardi/wikiextractor).<br/>
-  > Notice)<br/>
-  > To reproduce the baseline, we use the 0.1 version of the wikiextractor.<br/>
-  > We use the latest version of the wiki dump datasets for both Korean and English. We use the data dated 20220923. <br/>
-  > You can download the dump data [here](write_your_repository).
-  
-  - Korean Wikipedia: <https://dumps.wikimedia.org/kowiki>
-  - English Wikipedia: <https://dumps.wikimedia.org/enwiki>
-  <br/>
-  
-  
-  ```bash
-  python -m wikiextractor.WikiExtractor {Wiki dump file path} -o {output dir}
-  ```
-  ```bash
-  cat {otuput_dir}/*/* > {final output_file}.txt
-  ```
-  
-* After applying the wikiextractor to wiki dump data, we appy the [clean_str.py](tokenization/scripts/clean_str.py) for preprocessing the corpus.<br/>
-  It returns the **clean-{output_file}.txt**
-  ```bash
-  python tokenization/bash_scripts/clean_str.py \
-  --lang ko --corpus_type wiki \
-  --input_corpus datasets/wiki/wikiextracted/ko-wiki-20220923.txt
-  ```
-  
-* You can also download and preprocess all datasets at once.
+* You can download and preprocess all datasets at once.
   ```bash
   bash install_pipeline.sh
   ```
@@ -122,21 +95,62 @@
 
     bash bash_scripts/installation/clean_wiki.sh
     ```
+    <details>
+    <summary>More Details</summary>
+    <ol>
+      <li>
+      <a>You can download the dump datasets used for pretraining below.</a>
+        <ul>
+          <li><a href=https://dumps.wikimedia.org/kowiki>Korean Wikipedia</a></li>
+          <li><a href=https://dumps.wikimedia.org/enwiki>English Wikipedia</a></li>
+        </ul>
+      </li>
+      <li>
+        <a>Then we refine the dump dataset via <a href=https://github.com/attardi/wikiextractor>attardi/wikiextractor</a>.<br/>
+          We use the latest version of the wiki dump datasets, which is referred as 20220923, and we utilize the 0.1 version of the wikiextractor.
+        </a>
+        
+        python -m wikiextractor.WikiExtractor {Wiki dump file path} -o {output dir}
+        
+        cat {otuput_dir}/*/* > {final output_file}.txt
+      </li>
+      <li>
+        <a>After applying the wikiextractor to wiki dump data, we appy the <a href=tokenization/scripts/clean_str.py>clean_str.py</a> for preprocessing the corpus.<br/>
+      It returns the <B>clean-{output_file}.txt</B></a>
+        
+        python tokenization/bash_scripts/clean_str.py \
+        --lang ko --corpus_type wiki \
+        --input_corpus datasets/wiki/wikiextracted/ko-wiki-20220923.txt
+      </li>
+    </ol>
+      
+      
+      
+      
+
+
+    </details>
+  
   - Namu Wiki dataset
     ```bash
     bash bash_scripts/installation/download_namu.sh
 
     bash bash_scripts/installation/clean_namu.sh
     ```
-  - NLU task datasets
+  - Korean NLU datasets
     ```bash
     bash bash_scripts/installation/download_tasks.sh
     ```
-
+  - Korean Offensive Language datasets
+    ```bash
+    bash bash_scripts/installation/download_offensive.sh
+    ```
+  
 <a id="tokenization_baselines"></a>
 ### ii. Tokenization Baselines 
 
-* There are 13 tokenization strategies for Korean. See [here](tokenization/) to prepare and use each strategy.
+* There are 13 tokenization strategies for Korean. See [here](tokenization/) to prepare and use each strategy.<br/>
+  `_var` and `_distinct` is the tokneizer for KOMBO, using empty_token(▃) to strictly keep the consistent number of tokens for each character.
   
   * **Stroke** - 130
   * **Cji** - 136
@@ -147,10 +161,10 @@
   * **Subword** - 32k
   * **Morpheme-aware Subword** - 32k
   * **Word** - 64k - using Moses
-  * **KOMBO(Stroke)** - 130
-  * **KOMBO(Cji)** - 136
-  * **KOMBO(BTS)** - 112
-  * **KOMBO(Jamo)** - 170
+  * **Stroke_var** - 130
+  * **Cji_var** - 136
+  * **BTS_var** - 112
+  * **Jamo_distinct** - 170
 
 
 <a id="building_vocabulary"></a>
