@@ -93,7 +93,7 @@ def get_pretraining_model(args, tokenizer):
 
 def set_dataset(args, logger, tokenizer):
     # Set paths for future uses
-    data_dir = "datasets/nlu_tasks/pretraining"
+    data_dir = "datasets/pretraining"
     nsp_path = os.path.join(data_dir, (args.tok_name + '_' + str(args.max_seq_len) + 't'))
     wiki_file_path = os.path.join(data_dir, "concatenated.txt")
 
