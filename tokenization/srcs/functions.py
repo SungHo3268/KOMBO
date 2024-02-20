@@ -74,7 +74,7 @@ def build_vocab(args, tokenizer):
     if args.tok_name in ['subword', 'morphemeSubword']:
         # Training the BPE model
         tokenizer.train_model(args)         # save the tok.vocab and tok.model
-
+        """
         # -------- Save the results --------
         # fairseq vocab
         with open(os.path.join(args.output_dir, "fairseq.vocab"), "w") as fout:
@@ -83,6 +83,7 @@ def build_vocab(args, tokenizer):
                 for line in fin.readlines()[start_idx:]:
                     splitted = line.split("\t")
                     fout.write(f"{' '.join(splitted)}")
+        """
     else:
         counter = Counter()
         start_time = time.time()
@@ -123,7 +124,7 @@ def build_vocab(args, tokenizer):
                 f.write(f"{token}\t-1\n")
             for token, freq in vocab:
                 f.write(f"{token}\t{freq}\n")
-
+    """
     # save fairseq vocab
     print("Write fairseq vocab file...")
     with open(os.path.join(args.output_dir, "fairseq.vocab"), "w") as fout:
@@ -132,7 +133,7 @@ def build_vocab(args, tokenizer):
             for line in fin.readlines()[start_idx:]:
                 splitted = line.split("\t")
                 fout.write(f"{' '.join(splitted)}")
-
+    """
     if args.tok_name == 'word':
         tokenizer.close()
     print("--------------------- done ---------------------\n")
