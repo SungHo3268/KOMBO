@@ -37,3 +37,4 @@ IPython
 bertviz
 einops
 
+gdown
