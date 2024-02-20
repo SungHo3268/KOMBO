@@ -166,7 +166,7 @@
   --output_dir tokenization/resources/ \
   --n_jobs 20  
   ```
-  You can also build all vocabularies with [installation code](bash_scripts/tokenization/run_build_vocab.sh).
+- You can also build all vocabularies with [installation code](bash_scripts/tokenization/run_build_vocab.sh).
   ```bash
   bash bash_scripts/tokenization/run_build_vocab.sh
   ```
