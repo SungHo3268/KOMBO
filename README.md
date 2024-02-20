@@ -257,6 +257,7 @@ We preprocessed the input segments by referring the [official BERT code](https:/
 <a id="pretrained_models"></a>
 ### iii. Baselines
 You can find the pre-trained models [here](write_your_repository).
+(We will make the pre-trained model publicly available after publishing this paper.)
 
 <br/>
 <br/>
