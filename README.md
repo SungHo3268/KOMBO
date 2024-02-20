@@ -122,12 +122,6 @@
 
     bash bash_scripts/installation/clean_wiki.sh
     ```
-  - AIHub news dataset
-    ```bash
-    bash bash_scripts/installation/download_aihub.sh
-
-    bash bash_scripts/installation/clean_aihub.sh
-    ```
   - Namu Wiki dataset
     ```bash
     bash bash_scripts/installation/download_namu.sh
@@ -162,7 +156,7 @@
 <a id="building_vocabulary"></a>
 ### iii. Building vocabulary
 
-- This return the <code>tok.vocab</code> and <code>fairseq.vocab</code> (and <code>tok.model</code> @subword, morpphemeSubword) <br/>
+- This return the <code>tok.vocab</code> (and <code>tok.model</code> @subword, morpphemeSubword) <br/>
   ```bash
   python tokenization/scripts/build_vocab.py \
   --tok_type en --tok_name subword --vocab_size 32000 \
