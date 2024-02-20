@@ -123,12 +123,6 @@
         --input_corpus datasets/wiki/wikiextracted/ko-wiki-20220923.txt
       </li>
     </ol>
-      
-      
-      
-      
-
-
     </details>
   
   - Namu Wiki dataset
@@ -137,14 +131,7 @@
 
     bash bash_scripts/installation/clean_namu.sh
     ```
-  - Korean NLU datasets
-    ```bash
-    bash bash_scripts/installation/download_tasks.sh
-    ```
-  - Korean Offensive Language datasets
-    ```bash
-    bash bash_scripts/installation/download_offensive.sh
-    ```
+
   
 <a id="tokenization_baselines"></a>
 ### ii. Tokenization Baselines 
@@ -275,6 +262,7 @@ You can find the pre-trained models [here](write_your_repository).
 <br/>
 
 
+
 <a id="standard_korean_datasets"></a>
 ## 4. Standard Korean Datasets
 #### Performance of various tokenization methods for PLMs on standard Korean datasets.
@@ -288,6 +276,11 @@ You can find the pre-trained models [here](write_your_repository).
   - KorSTS ([Ham et al., 2020](https://aclanthology.org/2020.findings-emnlp.39/))
   - NSMC ([Park, 2016](https://github.com/e9t/nsmc))
   - PAWS-X ([Yang et al., 2019](https://aclanthology.org/D19-1382/))
+- You can download the Korean NLU datasets as follows
+  ```bash
+  bash bash_scripts/installation/download_tasks.sh
+  ```
+
 - We preprocess the datasets to remain only two languages, such as Korean and English with puncutations. Then, to fully concentrate on Korean, we convert the English into Korean using [g2pK](https://github.com/Kyubyong/g2pK), which is the convertor transforming from graphemes to phoneme and vice versa.
 
 
@@ -424,6 +417,10 @@ You can find the pre-trained models [here](write_your_repository).
   - BEEP! ([Moon et al., 2020](https://aclanthology.org/2020.socialnlp-1.4/))
   - K-MHaS ([Lee et al., 2022](https://aclanthology.org/2022.coling-1.311/))
   - KOLD ([Jeong et al., 2022](https://aclanthology.org/2022.emnlp-main.744/))
+- You can download the Korean offensive language datasets as follows
+  ```bash
+  bash bash_scripts/installation/download_offensive.sh
+  ```
 
 <a id="offensive_finetuning"></a>
 ### ii. Fine-tuning
