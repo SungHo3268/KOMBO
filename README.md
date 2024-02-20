@@ -402,7 +402,7 @@ You can find the pre-trained models [here](write_your_repository).
 <a id="toxic_datasets"></a>
 ## 6. Toxic Data
 #### Evaluation results for the robustness of the models on three toxic datasets.
-<img src='assets/ToxicData.png' width='800'>
+<img src='assets/OffensiveData.png' width='800'>
 
 <a id="toxic_data"></a>
 ### i. Datasets

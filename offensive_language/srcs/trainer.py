@@ -12,10 +12,10 @@ from torch.utils.tensorboard import SummaryWriter
 from argparse import ArgumentParser as parser
 sys.path.append(os.getcwd())
 from pretraining.srcs.functions import float_separator, BAR_FORMAT
-from toxic.srcs.utils import get_task_model
-from toxic.data_configs.BEEP.data_utils import load_task_dataset as BEEP_dataset
-from toxic.data_configs.KMHaS.data_utils import load_task_dataset as KMHaS_dataset
-from toxic.data_configs.KOLD.data_utils import load_task_dataset as KOLD_dataset
+from offensive_language.srcs.utils import get_task_model
+from offensive_language.data_configs.BEEP.data_utils import load_task_dataset as BEEP_dataset
+from offensive_language.data_configs.KMHaS.data_utils import load_task_dataset as KMHaS_dataset
+from offensive_language.data_configs.KOLD.data_utils import load_task_dataset as KOLD_dataset
 from nlu_tasks.srcs.nlu_utils import get_bert_tokenizer, get_optimizer, get_lr_scheduler
 from sklearn.metrics import precision_recall_fscore_support
 

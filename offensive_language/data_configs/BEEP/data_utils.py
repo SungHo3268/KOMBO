@@ -5,7 +5,7 @@ from nlu_tasks.srcs.preprocess import clean_text
 
 
 def load_task_dataset(args):
-    data_dir = "datasets/BEEP/"
+    data_dir = "datasets/offensive_language/BEEP/"
 
     if args.do_hangeulize:
         data_path = os.path.join(data_dir, f'processed_data_{args.remain_lang}_hangeulized.json')

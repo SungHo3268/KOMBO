@@ -95,8 +95,8 @@ class ArgsBase:
         return parser
 
     def add_nlu_task_args(self, description="Fine_tuning NLU Tasks"):
-        parent_parser = self.add_finetune_args(description)
-        parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning NLU Tasks")
+        parent_parser = self.add_finetune_args()
+        parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description=description)
 
         # for KorQuAD
         parser.add_argument('--max_query_len', type=int, default=64)
@@ -108,17 +108,17 @@ class ArgsBase:
         return parser
 
     def add_typo_task_args(self, description="Fine_tuning Typo Tasks"):
-        parent_parser = self.add_finetune_args(description)
-        parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning Typo Tasks")
+        parent_parser = self.add_finetune_args()
+        parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description=description)
 
         parser.add_argument('--typo_type', type=str, default="random", required=True, help="random  |  insert  |  transpose  |  substitute  |  delete")
         parser.add_argument('--typo_rates', type=str, default="0.0_0.05_0.10_0.15_0.20_0.25_0.30_0.35_0.40", required=True)
         return parser
 
-    def add_toxic_task_args(self, description="Fine_tuning Toxic Tasks"):
-        parent_parser = self.add_finetune_args(description)
+    def add_offensive_task_args(self, description="Fine_tuning Offensive Language Tasks"):
+        parent_parser = self.add_finetune_args()
 
-        parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description="Fine_tuning Toxic Tasks")
+        parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False, description=description)
         # for BEEP
         parser.add_argument('--binary', type=_bool, default=True)
         # for KOLD

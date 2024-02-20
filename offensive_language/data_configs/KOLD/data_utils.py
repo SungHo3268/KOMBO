@@ -6,7 +6,7 @@ from nlu_tasks.srcs.preprocess import clean_text
 
 
 def load_task_dataset(args):
-    data_dir = f"datasets/toxic/KOLD/"
+    data_dir = f"datasets/offensive_language/KOLD/"
     if args.do_hangeulize:
         data_path = os.path.join(data_dir, f'processed_data_{args.remain_lang}_hangeulized.json')
     else:

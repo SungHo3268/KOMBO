@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 sys.path.append(os.getcwd())
 from nlu_tasks.srcs.nlu_utils import get_config
-from toxic.srcs.models import KOLDModel, KMHaSModel, BEEPModel
+from offensive_language.srcs.models import KOLDModel, KMHaSModel, BEEPModel
 
 
 def get_task_model(args, tokenizer):
