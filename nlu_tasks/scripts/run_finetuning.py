@@ -15,7 +15,7 @@ from nlu_tasks.srcs.nlu_trainer import Trainer as NLU_Trainer
 parser = ArgsBase().add_nlu_task_args()
 temp_args = parser.parse_args()
 temp = vars(temp_args)
-config = json.load(open(f"nlu_tasks/nlu_configs/{temp['task_name']}/config.json"))
+config = json.load(open(f"nlu_tasks/data_configs/{temp['task_name']}/config.json"))
 for arg in config:
     temp[arg] = config[arg]
 
