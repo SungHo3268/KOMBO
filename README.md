@@ -1,5 +1,9 @@
 # KOMBO: Korean Character Representations Based on the Combination Rules of Subcharacters
 
+This paper was accpeted in Findings of ACL 2024.
+You can find the paper [here](https://aclanthology.org/2024.findings-acl.302).
+
+</br>
 
 <!-- TABLE OF CONTENTS -->
 <h2>Contents</h2>
@@ -474,8 +478,32 @@ You can find the pre-trained models [here](https://drive.google.com/drive/folder
 
 ## Citation
 
-```plain
-.
+**ACL**
+
+> SungHo Kim, Juhyeong Park, Yeachan Kim, and SangKeun Lee. 2024. KOMBO: Korean Character Representations Based on the Combination Rules of Subcharacters. In Findings of the Association for Computational Linguistics ACL 2024, pages 5102–5119, Bangkok, Thailand and virtual meeting. Association for Computational Linguistics.
+
+</br>
+
+**BibTeX**
+```
+@inproceedings{kim-etal-2024-kombo,
+    title = "{KOMBO}: {K}orean Character Representations Based on the Combination Rules of Subcharacters",
+    author = "Kim, SungHo  and
+      Park, Juhyeong  and
+      Kim, Yeachan  and
+      Lee, SangKeun",
+    editor = "Ku, Lun-Wei  and
+      Martins, Andre  and
+      Srikumar, Vivek",
+    booktitle = "Findings of the Association for Computational Linguistics ACL 2024",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand and virtual meeting",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.findings-acl.302",
+    pages = "5102--5119",
+    abstract = "The Korean writing system, Hangeul, has a unique character representation rigidly following the invention principles recorded in Hunminjeongeum. However, existing pre-trained language models (PLMs) for Korean have overlooked these principles. In this paper, we introduce a novel framework for Korean PLMs called KOMBO, which firstly brings the invention principles of Hangeul to represent character. Our proposed method, KOMBO, exhibits notable experimental proficiency across diverse NLP tasks. In particular, our method outperforms the state-of-the-art Korean PLM by an average of 2.11{\%} in five Korean natural language understanding tasks. Furthermore, extensive experiments demonstrate that our proposed method is suitable for comprehending the linguistic features of the Korean language. Consequently, we shed light on the superiority of using subcharacters over the typical subword-based approach for Korean PLMs. Our code is available at: https://github.com/SungHo3268/KOMBO.",
+}
 ```
 
 ## Acknowledgements
