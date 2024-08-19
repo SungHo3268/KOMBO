@@ -3,6 +3,11 @@
 This paper was accpeted in Findings of ACL 2024.
 You can find the paper [here](https://aclanthology.org/2024.findings-acl.302).
 
+_SungHo Kim, Juhyeong Park, Yeachan Kim, SangKeun Lee_
+</br></br>
+
+#### Overall illustration of KOMBO where the input is "훈민정음" which has four characters and twelve subcharacters.
+<img src='assets/model_architecture.png' width='900'>
 </br>
 
 <!-- TABLE OF CONTENTS -->
@@ -49,13 +54,6 @@ You can find the paper [here](https://aclanthology.org/2024.findings-acl.302).
     </ol>
   </li>
 </ol>
-<br/>
-<br/>
-
-#### Overall illustration of KOMBO where the input is "훈민정음" which has four characters and twelve subcharacters.
-<img src='assets/model_architecture.png' width='900'>
-
-<br/>
 <br/>
 
 <a id="environment_installation"></a>
@@ -228,7 +226,6 @@ We preprocessed the input segments by referring the [official BERT code](https:/
   # TOK_VOCAB = {200, 2k, 4k, 8k, 16k, 32k, 64k}
   ```
 
-
   * KOMBO-base
   ```bash
   python pretraining/scripts/run_pretraining.py --random_seed 42 \
@@ -264,8 +261,6 @@ You can find the pre-trained models [here](https://drive.google.com/drive/folder
 (We will make the pre-trained models publicly available after publishing this paper.)
 
 <br/>
-<br/>
-
 
 
 <a id="standard_korean_datasets"></a>
@@ -340,7 +335,6 @@ You can find the pre-trained models [here](https://drive.google.com/drive/folder
   # Notice) You should set `ignore_structure` option to "True", when you reconstruct the downsampling methods of Funnel(attention_pooling) or Hourglass(linear_pooling) Transformer in KOMBO.
   ```
 <br/>
-<br/>
 
 
 <a id="noisy_korean_datasets"></a>
@@ -408,7 +402,6 @@ You can find the pre-trained models [here](https://drive.google.com/drive/folder
   ```
 
 <br/>
-<br/>
 
 
 <a id="offensive_datasets"></a>
@@ -472,19 +465,17 @@ You can find the pre-trained models [here](https://drive.google.com/drive/folder
   ```
 
 <br/>
-<br/>
-
 
 
 ## Citation
 
-**ACL**
+#### ACL
 
 > SungHo Kim, Juhyeong Park, Yeachan Kim, and SangKeun Lee. 2024. KOMBO: Korean Character Representations Based on the Combination Rules of Subcharacters. In Findings of the Association for Computational Linguistics ACL 2024, pages 5102–5119, Bangkok, Thailand and virtual meeting. Association for Computational Linguistics.
 
 </br>
 
-**BibTeX**
+#### BibTeX
 ```
 @inproceedings{kim-etal-2024-kombo,
     title = "{KOMBO}: {K}orean Character Representations Based on the Combination Rules of Subcharacters",
@@ -506,7 +497,6 @@ You can find the pre-trained models [here](https://drive.google.com/drive/folder
 }
 ```
 
-<br/>
 <br/>
 
 ## Acknowledgements
