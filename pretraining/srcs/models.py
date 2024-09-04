@@ -161,7 +161,7 @@ class TokenFusingModule(nn.Module):
             )
         elif self.jamo_fusion == 'trans_gru_conv1':
             """
-            (2x3) kernel
+            (2x1) kernel
             """
             jamo_encode_layer = nn.TransformerEncoderLayer(
                 d_model=config.d_model,
