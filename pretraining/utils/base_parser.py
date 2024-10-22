@@ -27,8 +27,8 @@ class ArgsBase:
         parser.add_argument('--tok_name', type=str, help="It will be calculated in each script files.")
 
         # model
-        parser.add_argument('--model_name', type=str, default='tfm-bert-base',
-                            help="bert-base  |  tfm-bert-base")
+        parser.add_argument('--model_name', type=str, default='kombo-base',
+                            help="bert-base  |  kombo-base")
         parser.add_argument('--m_type', type=str, default='nano', help="hf  |  nano")   # ignore it.
         parser.add_argument('--max_seq_len', type=int, default=128)
         parser.add_argument('--batch_size', type=int, default=128)
