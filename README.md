@@ -1,9 +1,9 @@
 # KOMBO: Korean Character Representations Based on the Combination Rules of Subcharacters
 
-This paper was accpeted in Findings of ACL 2024.
+This paper is accpeted in Findings of ACL 2024.
 You can find the paper [here](https://aclanthology.org/2024.findings-acl.302).
 
-_SungHo Kim, Juhyeong Park, Yeachan Kim, SangKeun Lee_
+_SungHo Kim<sup>\*</sup>, Juhyeong Park<sup>\*</sup>, Yeachan Kim, SangKeun Lee_
 </br></br>
 
 #### Overall illustration of KOMBO where the input is "훈민정음" which has four characters and twelve subcharacters.
