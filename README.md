@@ -1,4 +1,4 @@
-# KOMBO: Korean Character Representations Based on the Combination Rules of Subcharacters
+# 🍿 KOMBO: Korean Character Representations Based on the Combination Rules of Subcharacters
 
 This paper is accpeted in Findings of ACL 2024.
 You can find the paper [here](https://aclanthology.org/2024.findings-acl.302).
